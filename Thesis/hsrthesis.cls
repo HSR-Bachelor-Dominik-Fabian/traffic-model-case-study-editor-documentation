@@ -18,7 +18,7 @@
 \usepackage[scaled=0.85]{helvet}
 \usepackage{hyperref}
 \usepackage{array}
-\usepackage{ngerman}
+\usepackage{german}
 \usepackage{color}
 \usepackage{listings} \lstset{backgroundcolor=\color{lightgrey}} \lstset{language=Java}
 \usepackage{wrapfig}

@@ -8,9 +8,25 @@
 \usepackage{graphicx}
 \usepackage{geometry}
 \usepackage{color}
-\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[usenames,dvipsnames,table]{xcolor}
 \usepackage{DejaVuSans}
 \usepackage[T1]{fontenc}
+
+\usepackage{cite}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage[nottoc]{tocbibind}
+\usepackage{epstopdf}
+\usepackage{graphicx}
+\usepackage{tabularx}
+%\usepackage{floatrow}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\renewcommand{\rmdefault}{ptm}
+
 \renewcommand*{\familydefault}{\sfdefault}
 \geometry{verbose,a4paper,tmargin=35mm,bmargin=35mm,lmargin=25mm,rmargin=25mm}
 \author{Dominik Heeb, Fabian Keller}
@@ -56,60 +72,22 @@ Der zeitliche Projektplan zeigt eine grobe zeitliche Übersicht über die gesamt
 
 \subsection{Meilensteine}
 \begin{flushleft}
-	Die einzelnen Meilensteine, die bereits in der zeitlichen Planung ersichtlich sind, beinhalten folgende Ziele:
+Die einzelnen Meilensteine beinhalten folgende Ziele:
 \end{flushleft}
 \begin{tabular}{cl}
-	\textcolor{Orange}{\textbf{M1:}} & Projektplanung erstellt (Projektplan, )\\[0.2cm]
-	\textcolor{Orange}{\textbf{M2:}} & Funktionale und nicht funktionale Anforderungen, Konzepte um Verkehrsdaten\\[0.1cm]
-		& effizient und übersichtlich darzustellen, Kommunikationskonzept zwischen Frontend\\[0.2cm]
-		& und Backend, Design der Software-Architektur, Prototyp\\[0.2cm]
-	\textcolor{NavyBlue}{\textbf{M3:}} & Verkehrsdaten auf Frontend darstellen\\[0.2cm]
-	\textcolor{NavyBlue}{\textbf{M4:}} & Definierte Änderungen an Verkehrsdaten können vorgenommen werden\\[0.2cm]
-	\textcolor{Dandelion}{\textbf{M5:}} & Präsentation der Bachelorarbeit, Abgabe Bericht\\
+	\textcolor{Orange}{\textbf{M1:}} & Projektplan erstellt, Infrastruktur fertig aufgebaut \\[0.2cm]
+	\textcolor{Orange}{\textbf{M2:}} & Prototyp v0.1: Anzeigen von Strassennetz in Online Map Editor \\[0.2cm]
+	\textcolor{Orange}{\textbf{M3:}} & Prototyp v0.2: Anzeigen von Parameter zu Strassen in Online Map Editor \\[0.2cm]
+	\textcolor{NavyBlue}{\textbf{M4:}} & komplette Verkehrsdaten (Strassennetz, ÖV-Verkehsnetz, Parameter usw.) in Online Map-Editor darstellen\\[0.2cm]
+	\textcolor{NavyBlue}{\textbf{M5:}} & Definierte Änderungen können an Verkehrsdaten in Online Map-Editor vorgenommen werden\\[0.2cm]
+	\textcolor{Dandelion}{\textbf{M6:}} & Präsentation der Bachelorarbeit, Abgabe Bericht\\
 \end{tabular}
 \subsection{Besprechungen}
 \begin{flushleft}
-	Die Besprechung findet jede Woche am Donnerstag im Raum 1.167 um 14:00 Uhr statt. In dieser Besprechung wird der aktuelle Status der Bachelorarbeit besprochen, offene Fragen geklärt und das weitere Vorgehen besprochen.\\
-Das Projektteam erstellt vor jeder Besprechung eine Traktandenliste und führt ein Protokoll. Dieses Protokoll wird anschliessend an den Betreuer und die Auftraggeber gesendet.
+	Die Besprechung findet jede Woche am Donnerstag im Raum 1.167 um 14:00 Uhr statt. In dieser Besprechung wird der aktuelle Status der Bachelorarbeit und das weitere Vorgehen besprochen und offene Fragen geklärt.\\
+Das Projektteam erstellt vor jeder Besprechung eine Traktandenliste und führt ein Sitzungsprotokoll. Dieses Protokoll wird anschliessend an den Betreuer und den Auftraggeber gesendet.
 \end{flushleft}
-\subsection{Risiken}
-\begin{flushleft}
-\begin{tabular}{l l l}
-Risiko & Wahrscheinlichkeit & Potential\\
-\hline
-Datenmenge zu gross & mittel & mittel\\
-Backend Implementierung zu aufwändig & klein & mittel\\
-\end{tabular}\\[0.2cm]
-\subsubsection*{Datenmenge zu gross}
-Dieses Risiko enthält die Gefahr das durch zu grosse Datenmengen die Client-Side Implementierung des Editor zu aufwändig wird. Die Folge daraus wäre das der Editor nicht zufriedenstellend entwickelt werden kann. Eine Massnahme um die Wahrscheinlichkeit des Eintretens klein zu halten ist es, von Anfang an die Menge der Daten in die Implementierung und Konzeptionierung einfliessen zu lassen.\\[0.2cm]
-\subsubsection*{Backend Implementierung zu aufwändig}
-Die Konzeptionierung des Verkehrsmodell-Editor behandelt hauptsächlich die Frontend Entwicklung. Wenn der Backend zu komplex wird, bleibt zu wenig Zeit den Frontend ansprechend zu entwickeln. Die Massnahme ist, den Backend auf das Wesentliche zu beschränken und die Entwicklung des Frontend in den Vordergrund zu stellen. Funktionen für den Backend sollten wenn sie zu viel Zeit brauchen vereinfacht werden.\\
-
-\end{flushleft}
+\input{chapter/risc_analysis}
 \newpage
-\section{Vorgehen}
-\subsection{Projektmanagement}
-\subsubsection{Aufbau}
-\begin{itemize}
-	\item Elaboration: 
-	\item Construction: 
-	\item Transition: 
-\end{itemize}
-\subsubsection{Tools}
-Für das Projektmanagement werden folgende Tools verwendet:
-\begin{itemize}
-\item JIRA: für die Planung und Verwaltung der Arbeitspakete.
-\item GitHub: Der Code und die Dokumentation werden über Github Repositories verwaltet
-\item CI Server (JetBrains TeamCity): Mittels eines CI Server wird die Qualität und Lauffähigkeit des Codes geprüft
-\item TexMaker: Latex Editor für die Dokumentation
-\item IntelliJ IDEA 15: IDE für Java Entwicklung
-\end{itemize}
-\subsection{Entwicklung}
-\subsubsection{Vorgehen}
-Die Entwicklung der Bachelorarbeit wird als Agiles Softwareprojekt aufgebaut.
-\subsubsection{Unit Testing}
-\subsubsection{Code Reviews}
-Code Reviews und Pair Programming sind Methoden um die Qualität des Codes innerhalb des Teams hoch zu halten
-\subsubsection{Code Analyse}
-\subsubsection{Code Style Guidelines}
+\input{chapter/progress}
 \end{document}

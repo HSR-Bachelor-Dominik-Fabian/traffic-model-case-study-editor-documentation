@@ -11,11 +11,25 @@
 \usepackage[usenames,dvipsnames,table]{xcolor}
 \usepackage{DejaVuSans}
 \usepackage[T1]{fontenc}
+\usepackage[absolute]{textpos}
+
+\fancypagestyle{lscape}{% 
+\fancyhf{} % clear all header and footer fields 
+\fancyfoot[LE]{%
+\begin{textblock}{20}(1,5){\rotatebox{90}{\leftmark}}\end{textblock}
+\begin{textblock}{1}(13,10.5){\rotatebox{90}{\thepage}}\end{textblock}}
+\fancyfoot[LO] {%
+\begin{textblock}{1}(14,2){\rotatebox{90}{Seite \thepage}}\end{textblock}
+\begin{textblock}{20}(1,10){\rotatebox{90}{Projektplan - Verkehrsmodell-Fallstudien-Editor}}\end{textblock}
+\begin{textblock}{20}(1,2){\rotatebox{90}{Dominik Heeb, Fabian Keller}}\end{textblock}
+}
+\renewcommand{\headrulewidth}{0pt} 
+\renewcommand{\footrulewidth}{0pt}}
 
 \usepackage{cite}
 \usepackage{float}
 \usepackage{wrapfig}
-\usepackage{lscape}
+\usepackage{pdflscape}
 \usepackage{rotating}
 \usepackage[nottoc]{tocbibind}
 \usepackage{epstopdf}
@@ -31,12 +45,16 @@
 \geometry{verbose,a4paper,tmargin=35mm,bmargin=35mm,lmargin=25mm,rmargin=25mm}
 \author{Dominik Heeb, Fabian Keller}
 \title{Projektplan Bachelorarbeit}
-\pagestyle{fancy}
+
+\fancypagestyle{headings}{%
 \fancyhead{}
 \fancyhead[L]{Projektplan - Verkehrsmodell-Fallstudien-Editor}
-\fancyhead[R]{Domink Heeb, Fabian Keller}
+\fancyhead[R]{Dominik Heeb, Fabian Keller}
 \fancyfoot{}
 \fancyfoot[R]{Seite \thepage}
+\renewcommand{\headrulewidth}{1pt} }
+
+\pagestyle{headings}
 \begin{document}
 \begin{titlepage}
 	\begin{Huge}

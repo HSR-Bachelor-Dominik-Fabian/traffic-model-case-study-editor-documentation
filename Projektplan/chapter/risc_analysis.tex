@@ -15,6 +15,9 @@ Die Konzeptionierung des Verkehrsmodell-Editor behandelt hauptsächlich die Fron
 
 \definecolor{lightgray}{rgb}{0.83, 0.83, 0.83}
 %Since the PHA worksheet is wide, start in a new page by using begin {landscape} command.
+\newgeometry{hmargin=3cm,vmargin=5cm}
+\thispagestyle{lscape}
+\pagestyle{lscape}
 \begin{landscape}
 \begin{table}[H]
 \scriptsize
@@ -33,3 +36,7 @@ Die Konzeptionierung des Verkehrsmodell-Editor behandelt hauptsächlich die Fron
 \end{tabular}
 \end{table}
 \end{landscape}
+
+\restoregeometry
+\pagestyle{headings}
+

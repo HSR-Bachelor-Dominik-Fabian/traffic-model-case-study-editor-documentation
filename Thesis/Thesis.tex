@@ -25,6 +25,7 @@
 \documentclass[11pt,twoside]{hsrthesis}
 
 \makeindex
+\input{index/glossar}
 
 % do this here, so you can \gls{...} to it
 \makeglossaries
@@ -42,18 +43,17 @@
 \input{chapter/03Architektur}
 \input{chapter/04Lösungsansätze}
 \input{chapter/05Implementation}
-% ...
-%\input{index/glossar}
-\newglossaryentry{sqlite}{name=SQLite,description={SQLite ist eine Datenbankengine, welche ohne Konfiguration auskommt. Es handelt sich dabei um eine Datenbank in einer Datei},first={SQLite}}
 
+% List of figures & glossary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \listoffigures
-
-\printglossaries
+\glsaddall
+\printglossary[style=altlist,title=Glossar]
 
 % Bibliography
 %%%%%%%%%%%%%%
-%\bibliographystyle {alpha}
-%\bibliography{index/bibliography}
+\bibliographystyle{alpha}
+\bibliography{index/bibliography}
 
 
 % Attached sources

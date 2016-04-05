@@ -27,6 +27,8 @@
 \usepackage{natbib}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{glossaries}
+\usepackage{mfirstuc}
 \definecolor{lightgrey}{rgb}{.9,.9,.9}
 
 
@@ -50,7 +52,7 @@
 		% Logos
 		\begin{picture}(0,200)(0,-100)
       		\put(-60, -30){\includegraphics[height=30mm]{images/hsrlogo.png}}
-      		\put(200, -15){\includegraphics[height=20mm]{images/partnerlogo.png}}
+      		\put(200, -15){\includegraphics[height=14mm]{images/partnerlogo.png}}
 		\end{picture}
 
 		% title

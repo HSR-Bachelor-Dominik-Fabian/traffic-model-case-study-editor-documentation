@@ -1,39 +1,40 @@
 \subsection{Risiken}
+\subsubsection*{1: Datenmenge zu gross}
 \begin{flushleft}
-\begin{tabular}{l l l}
-Risiko & Wahrscheinlichkeit & Potential\\
-\hline
-Datenmenge zu gross & mittel & mittel\\
-Backend Implementierung zu aufwändig & klein & mittel\\
-\end{tabular}\\[0.2cm]
-\subsubsection*{Datenmenge zu gross}
 Dieses Risiko enthält die Gefahr das durch zu grosse Datenmengen die Client-Side Implementierung des Editor zu aufwändig wird. Die Folge daraus wäre das der Editor nicht zufriedenstellend entwickelt werden kann. Eine Massnahme um die Wahrscheinlichkeit des Eintretens klein zu halten ist es, von Anfang an die Menge der Daten in die Implementierung und Konzeptionierung einfliessen zu lassen.\\[0.2cm]
-\subsubsection*{Backend Implementierung zu aufwändig}
+\subsubsection*{2: Backend Implementierung zu aufwändig}
 Die Konzeptionierung des Verkehrsmodell-Editor behandelt hauptsächlich die Frontend Entwicklung. Wenn der Backend zu komplex wird, bleibt zu wenig Zeit den Frontend ansprechend zu entwickeln. Die Massnahme ist, den Backend auf das Wesentliche zu beschränken und die Entwicklung des Frontend in den Vordergrund zu stellen. Funktionen für den Backend sollten wenn sie zu viel Zeit brauchen vereinfacht werden.\\
 
 \end{flushleft}
 
 \definecolor{lightgray}{rgb}{0.83, 0.83, 0.83}
 %Since the PHA worksheet is wide, start in a new page by using begin {landscape} command.
-\newgeometry{hmargin=3cm,vmargin=5cm}
+\newgeometry{hmargin=2cm,vmargin=3cm}
 \thispagestyle{lscape}
 \pagestyle{lscape}
 \begin{landscape}
+\def\arraystretch{1.5}%  
 \begin{table}[H]
 \scriptsize
-\caption{Risikoanalyse (fortlaufend)}
-\begin{tabular}{p{0.5cm}p{4cm} p{1.5cm} p{1.5cm} p{1cm} p{2cm}p{1.5cm}p{1cm}p{2cm}p{1.5cm}}
-\hline & & & & \bf Initiales Risiko \cellcolor{lightgray} & \cellcolor{lightgray} & \cellcolor{lightgray} & \bf Aktuelles Risiko & & \\ [13pt]
-\bf \bf ID & \bf Risikobezeichnung & \bf Risikoklasse & \bf Mögliche Risikoursache & \ \bf EW \% \cellcolor{lightgray} & \bf Schadenshöhe (h) \cellcolor{lightgray} & \bf Risikowert (h) \cellcolor{lightgray} & \bf EW \% & \bf Schadenshöhe (h) & \bf Risikowert (h) \\
+
+\begin{tabular}{m{0.5cm}m{4cm} m{1.5cm} m{4cm} >{\columncolor{lightgray}}m{1cm} >{\columncolor{lightgray}}m{2cm}>{\columncolor{lightgray}}m{1.5cm}m{1cm}m{2cm}m{1.5cm}}
+& & & & \bf Initiales Risiko  &  & & \bf Aktuelles Risiko & & \\ [13pt]
+\bf \bf ID & \bf Risikobezeichnung & \bf Risikoklasse & \bf Massnahmen & \ \bf EW \%  & \bf Schadenshöhe (h)  & \bf Risikowert (h)  & \bf EW \% & \bf Schadenshöhe (h) & \bf Risikowert (h) \\
 \hline
-&&&&&&&&&\\
-1 & Datenmenge zu gross & mittel \cellcolor{yellow!50} &&&&&&&\\
+1 & Datenmenge zu gross & mittel \cellcolor{yellow!50} & Architektur auf grosse Datenmenge auslegen & 40 & 60 & 24 &40 & 60 & 24\\
+2 & Backend Implementierung zu aufwändig & klein \cellcolor{green!50} & Backend-Logik einfach halten & 10 & 40 & 4 & 10 & 40 & 4\\
+3 & Ständige Veränderung der Anforderungen & mittel \cellcolor{yellow!50} & Anforderungen frühzeitig festlegen & 30 & 100 & 30 & 30 & 100 & 30\\
+4 & Front-End entspricht nicht Vorstellungen von Senozon & klein \cellcolor{green!50} & Enge Zusammenarbeit (Continuous Deployment, frühe Entwicklung Prototyp) & 5 & 80 & 4 & 5 & 80 & 4\\
+5 & Ausfall Krankheit & klein \cellcolor{green!50} & Know-How Transfer & 15 & 24 & 3.6 & 15 & 24 & 3.6\\
+6 & Keine geeignete Library für Kartendarstellung & klein \cellcolor{green!50} & Sorgfälltige Evaluation \& Prototyp & 3 & 150 & 5 & 3 & 150 & 5\\
+7 & Aufwand pro Meilenstein unterschätzt & klein \cellcolor{green!50} & Zeitreserven einplanen & 20 & 20 & 4 & 20 & 20 & 4\\
 %Example- & 5g & & Early launch of life crafts & Improper evacuation procedure & 3 & 4 & \cellcolor{red!50} 12 & Plans for Emergency Preparedness based on facility design & 2& 2& \cellcolor{green!50} 4 \\ %cell color can be changed to red or yellow- {yellow!50} or red -{red!50}
 
 %add more rows as required
 
 \hline
 \end{tabular}
+\caption{Risikoanalyse (fortlaufend)}
 \end{table}
 \end{landscape}
 

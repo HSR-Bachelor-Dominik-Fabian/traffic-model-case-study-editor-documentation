@@ -1,18 +1,8 @@
 \chapter{Problemstellung}
-
-\section{Senozon AG}
-Diese Bachelorarbeit wird in Zusammenarbeit mit dem Unternehmen Senozon AG durchgeführt.\\
-Senozon ist ein international tätiges Technologieunternehmen auf dem Gebiet der Standortplanung und -bewertung, Verkehr- und Infrastrukturplanung sowie Mobilitätsforschung. Dafür unterhält Senozon verschiedene Verkehrsmodelle, die im Wesentlichen aus einem Strassennetz, ÖV-Fahrplan und Personendaten bestehen, wobei letztere die Reiseaktivität der Personen beschreiben.
-\section{MATSim Framework}
-Die Senozon AG verwendet für die Simulation der verschiedenen Verkehrsmodelle das Open Source Framework MATSim.\\
-MATSim ist ein modular aufgebautes Tool zur agentenbasierten Mobilitätssimulation, welches besonders für grosse Szenarien mit Millionen von Agenten (Personen) geeignet ist. Zudem kann sowohl privater als auch öffentlicher Verkehr (Bus, Zug, Tram usw.) simuliert werden. MATSim arbeitet leider noch Dateibasiert. D.h. alle Informationen für die Simulationen werden...
-Die Senozon AG stellt zusammen mit der ETH Zürich, der TU Berlin und vielen anderen Universitäten die Weiterentwicklung und Qualitätssicherung von MATSim sicher.\\
-\section{Detaillierte Problemstellung}
-\subsection{Allgemein}
-TODO
-\subsection{Problem Datenfiles}
-TODO
-\subsection{Änderungsmanagement}
-TODO
-
-
+Immer wieder kommen Kunden der Senozon AG mit Fragestellungen wie \glqq{} Was passiert, wenn diese Strasse gesperrt wird?\grqq{} oder \glqq{} Was passiert, wenn da ein Neubaugebiet mit 5000 Einwohnern gebaut wird?\grqq{}. Bislang sind diese Fragestellungen mit viel Handarbeit verbunden, um das Modell anzupassen. Dies insbesondere, weil die Simulationsdaten von MATSim XML basiert und meist sehr gross sind.\\
+Zur Zeit kann lediglich die Senozon AG selbst die Änderungen an den Verkehrsmodellen vornehmen. Durch das Entwickeln einer Web Applikation, die den Kunden ebenfalls zur Verfügung steht, kann nun neu auch der Kunde eine Verkehrsfallstudie erstellen und dann selbstständig simulieren lassen.
+\section{Problem dateibasierte Simulation}
+Die Simulationssoftware MATSim arbeitet mit dateibasierten Simulationdaten. D.h. die benötigten Informationen für die Simulation, werden in XML Dateien zur Verfügung gestellt. Diese XML Dateien können bis zu mehreren GigaBytes gross werden, wenn es sich um grössere Netzwerke, wie z.B. das Netz der gesamten Schweiz, handelt.\\
+Für die Bearbeitung dieser Daten verwendet die Senozon AG zur Zeit eine Client Applikation, die direkt mit den XML Dateien arbeitet. Dadurch ist diese Applikation sehr Arbeitsspeicher intensiv und für die Installation beim Kunden nicht optimal.
+\section{Änderungsmanagement}
+Die Änderungen, die in der Client Applikation gemacht werden, überschreiben die vorhandenen Daten in der XML Datei. Dadurch muss für jede Verkehrsfallstudie der komplette Datenstamm kopiert und dadurch redundant abgelegt werden. Sollte nun ein Update der vorhandenen Stammdaten vorliegen, müsste dieses Backup bei allen Studien eingepflegt werden.\\

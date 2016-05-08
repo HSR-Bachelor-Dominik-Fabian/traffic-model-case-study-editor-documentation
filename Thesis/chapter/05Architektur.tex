@@ -38,7 +38,7 @@ Durch die Anforderungen bezüglich Performance und Antwortgeschwindigkeiten muss
 \caption{SimMap-Editor Tier}
 \label{tier_architecture}
 \end{figure}
-Der SimMap-Editor bilded den Client-Tier der Applikation ab. Die Aufgabe des Editor ist es die Funktionalitäten für den Benutzer darzustellen und die Daten für die Kartendarstellung von den Services anzufragen. Der Editor wird als Frontend Applikation aufgebaut. Durch die Aufteilung der Softwarelösung in 3 Tier wurde der Backend-Code des Editor in den Backend-Tier ausgelagert. Daher besitzt der Editor keine Backendimplementation.
+Der SimMap-Editor bilded den Client-Tier der Applikation ab. Die Aufgabe des Editor ist es die Funktionalitäten für den Benutzer darzustellen und die Daten für die Kartendarstellung von den Services anzufragen. Der Editor wird als Frontend Applikation aufgebaut. Durch die Aufteilung der Softwarelösung in 3 Tier wurde der Backend-Code des Editor in den Backend-Tier ausgelagert. Daher besitzt der Editor keine Backendimplementation. Die Presentation Logic dieses Tier beinhaltet die Darstellung der Karten, Changesets und Anforderung der Daten in Tiles aufgeteilt. Das Rendering der Daten wird auch von diesem Tier übernommen.
 \section{SimMap-Service}
 
 \section{Datenbank}

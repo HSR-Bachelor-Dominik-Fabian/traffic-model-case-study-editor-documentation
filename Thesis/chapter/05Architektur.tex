@@ -12,10 +12,11 @@ Quelle: \href{https://msdn.microsoft.com/en-us/library/bb259689.aspx}{https://ms
 \end{figure}
 Um von einem Eintrag auf das Tile zu schliessen, in welchem dieser sichtbar ist, wird ein Schlüssel (QuadKey) berechnet. Der QuadKey benennt eindeutig das kleinstmögliche Tile in welchem der ganze Eintrag (z.B. eine Strasse) angezeigt werden kann. Der QuadKey wird nach dem System in Abbildung \ref{fig:tilesystem} erstellt. Dabei wird auf der äussersten Zoomstufe die Welt in 4 Tiles aufgeteilt. Diese werden nummeriert. z.B. 0 für links oben, 1 für rechts oben. Um die nächste Stufe der Tiles zu erstellen, wird jedes Tile wieder in 4 Tiles aufgeteilt und dann ebenfalls nummeriert. Dabei wird als Prefix die Nummer des alten Tiles verwendet. Dadurch kann jedes Tile auf jeder Zoomstufe eindeutig adressiert werden. Der QuadKey bietet auch die Möglichkeit mit Hilfe des Prefix alle Tiles unterhalb eines Tiles zu berechnen. So starten alle QuadKeys welche auf einer beliebigen Zoomstufe in einem Tile unterhalb des linken oberen Tile auf Level 1 sind mit einer 0. Dieser Ansatz kann für die Filterung der Daten verwendet werden.
 \subsection{Preprocessing und Bewertung der Daten}\label{sec:concept_preprocessing}
-Um die Zugriffszeiten der Datenbank zu erhöhen werden die Daten beim Importieren vorberechnet. Durch diesen Vorgang werden bewusst Redundanzen in das Datenmodell eingeführt. Diese Redundanzen erlauben den Zugriff auf Daten ohne teure JOIN Statements oder SQL Funktionen aufzurufen. Auf die Vorberechnungen welche im Datenmodell verwendet werden wird tiefer im Abschnitt \ref{sec:tilingdataimplementation} \nameref{sec:tilingdataimplementation} eingegangen. Um weiteren Berechnungsaufwand zu reduzieren wird jeder Datensatz neben der Vorberechnung auf seine Anzeigewichtigkeit bewertet. Dabei wird berechnet ab welcher Stufe z.B. die Strasse dargestellt wird.
-
+Um die Zugriffszeiten der Datenbank zu verkürzen werden die Daten beim Importieren vorberechnet. Durch diesen Vorgang werden bewusst Redundanzen in das Datenmodell eingeführt. Diese Redundanzen erlauben den Zugriff auf Daten ohne teure JOIN Statements oder SQL Funktionen aufzurufen. Auf die Vorberechnungen welche im Datenmodell verwendet werden wird tiefer im Abschnitt \ref{sec:tilingdataimplementation} \nameref{sec:tilingdataimplementation} eingegangen. Um weiteren Berechnungsaufwand zu reduzieren wird jeder Datensatz neben der Vorberechnung auf seine Anzeigewichtigkeit bewertet. Dabei wird berechnet ab welcher Stufe z.B. die Strasse dargestellt wird.
+\subsection{Client-Side Cache}
+Um die Menge der Anfragen auf die Services zu reduzieren wird ein Client-Side Cache eingeführt. Dieser wird mit so genannten ETag durchgeführt. Ein ETag ist ein Hash in welchen das Alter der Daten eingerechnet ist. Nach dem der Client das erste Mal Daten vom Service angefordert hat, erhält er neben den Daten einen ETag vom Server. Der Client kann nun die Anforderung in einen Cache speichern und muss dadurch nicht mehr beim Server anfragen. Wenn die Dauer des Cache ausläuft und der Client beim Server neue Daten anfragt, wird der ETag mitgesendet. Der Server kann dann entscheiden, ob neue Daten vorhanden sind oder die Daten welche früher im Cache waren noch aktuell sind. Wenn diese noch aktuell sind werden keine Daten zurück gesendet sondern der HTTP Status "`304 Not Modified"'. Der Client weiss dadurch das die Daten noch aktuell sind und kann sie erneut in den Cache laden.
 \subsection{Changeset}
-TODO
+Um Daten auf der Karte zu bearbeiten musste ein Konzept für die Speicherung der Daten entwickelt werden. Da die Lösung mehrere User mit mehreren Änderungsprojekten unterstützen und die grosse Stammdatenmenge nicht für jeden User neu abgespeichert werden sollte, wurde das Konzept der Changesets eingeführt. Ein Changeset ist eine Speichermenge welche nur die Differenz zu den Stammdaten haltet. Dadurch kann die Grösse der gespeicherten Daten reduziert werden.
 \section{Architektur}
 \begin{figure}[H]
 \centering
@@ -23,10 +24,22 @@ TODO
 \caption{Tier des Verkehrsmodell-Fallstudien-Editor}
 \label{tier_architecture}
 \end{figure}
-Durch die Anforderungen bezüglich Performance und Antwortgeschwindigkeiten musste die Architektur für die Softwarelösung des Verkehrsmodell-Fallstudien-Editor skalierbar aufgebaut werden. Eine Entkopplung der Komponenten erlaubt eine Verteilung und kann daher die Last auf dem einzelnen Server senken. Die Softwarelösung für den Verkehrsmodell-Fallstudien-Editor ist daher als 3-Tier Applikation aufgebaut. Der Frontside-Tier ist ein Webprojekt implementiert mit dem Play Framework. Der Backend-Tier wird als REST Service (Maturity Level 2) mit Dropwizard entwickelt. Der Daten-Tier wird durch eine PostgreSQL Datenbank bereitgestellt. Der Backend-Tier wird durch eine Load Balancer skalierbar und kann daher mehrere Anfragen parallel ausführen.\\
+Durch die Anforderungen bezüglich Performance und Antwortgeschwindigkeiten musste die Architektur für die Softwarelösung des Verkehrsmodell-Fallstudien-Editor skalierbar aufgebaut werden. Eine Entkopplung der Komponenten erlaubt eine Verteilung und kann daher die Last auf dem einzelnen Server senken. Die Softwarelösung für den Verkehrsmodell-Fallstudien-Editor ist daher als 3-Tier Applikation aufgebaut. Der Frontside-Tier ist ein Webprojekt implementiert mit dem Play Framework. Der Backend-Tier wird als REST Service (Maturity Level 2) mit Dropwizard entwickelt. Der Daten-Tier wird durch eine PostgreSQL Datenbank bereitgestellt. Der Backend-Tier wird durch eine Load Balancer skalierbar und kann daher mehrere Anfragen parallel ausführen.
+\begin{figure}[H]
+\centering
+\includegraphics[height=7cm]{images/layers.png}
+\caption{Aufteilung der Layer über die Tiers}
+\label{tier_architecture}
+\end{figure}
 \section{SimMap-Editor}
-TODO
+\begin{figure}[H]
+\centering
+\includegraphics[height=2cm]{images/presentationlayer.png}
+\caption{SimMap-Editor Tier}
+\label{tier_architecture}
+\end{figure}
+Der SimMap-Editor bilded den Client-Tier der Applikation ab. Die Aufgabe des Editor ist es die Funktionalitäten für den Benutzer darzustellen und die Daten für die Kartendarstellung von den Services anzufragen. Der Editor wird als Frontend Applikation aufgebaut. Durch die Aufteilung der Softwarelösung in 3 Tier wurde der Backend-Code des Editor in den Backend-Tier ausgelagert. Daher besitzt der Editor keine Backendimplementation.
 \section{SimMap-Service}
-TODO
+
 \section{Datenbank}
 TODO

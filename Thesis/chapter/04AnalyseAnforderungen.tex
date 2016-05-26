@@ -1,16 +1,30 @@
 
-\chapter{Anforderungen \& Analyse} \label{ch:anforderungen_section}
+\chapter{Anforderungen \& Risiken} \label{ch:anforderungen_section}
 \section{Anforderungen}
+Im Rahmen dieser Bachelorarbeit wurden folgende funktionalen und nicht funktionalen Anforderungen von der Senozon AG an die Arbeit gestellt.
 \subsection{Funktionale Anforderungen}
-\begin{flushleft}
-TODO
-\end{flushleft}
+Der entwickelte Prototyp soll vor allem aufzeigen, wie und mit welchen Konzepten gewisse Funktionalitäten dieser Web Applikation implementiert werden könnten. Dafür wurden folgende funktionalen Anforderungen an das Frontend sowie das Backend gestellt:
+\begin{itemize}
+\item Die Applikation soll das aktuelle Verkehrsmodell mit Hilfe einer Karte darstellen.
+\item Der Benutzer hat die Möglichkeit ein ChangeSet zu laden, löschen und erstellen.
+\item Der Benutzer hat die Möglichkeit ein Attribut einer Strasse zu bearbeiten und diese Änderung persistent zu speichern.
+\item Der Benutzer kann über ein Formular neue Stammdaten importieren.
+\item 
+\end{itemize}
 \subsection{Nicht funktionale Anforderungen}
-\begin{flushleft}
-TODO
-\end{flushleft}
-\section{Analyse}
-\subsection{Risiken}
-\begin{flushleft}
-TODO
-\end{flushleft}
+Zusätzlich zu den funktionalen Anforderungen, ist es bei diesen grossen Datenmengen sehr wichtig, die nicht funktionalen Anforderungen zu erfüllen. Folgende nicht funktionalen Anforderungen haben uns vor grössere Herausforderungen gestellt:
+\begin{itemize}
+\item Performance: Effiziente Kommunikation zwischen Frontend und Backend für die Übertragung von Netzwerkdaten.
+\item Performance: Datenbankzugriff auf Service für Abfrage von Netzwerkdaten inkl. Filterung muss unter 1 Sekunde beantwortet werden.
+\item Bedienbarkeit: Das User Interface soll einfach und möglichst ohne Tutorial bedienbar sein.
+\item Aussehen: Das User Interface soll im Design von Senozon erscheinen.
+\item Skalierbarkeit: Die Web Applikation soll skalierbar sein, damit auch grössere Mengen an Daten bewältigt werden können.
+\end{itemize}
+\section{Risiken}
+In einer ersten Phase der Bachelorarbeit wurde eine Analyse der bestehenden Risiken in diesem Projekt durchgeführt. Während des gesamten Arbeit war das primäre Ziel, diese Risiken vollständig zu eliminieren.
+\subsection*{Risiko 1: Grosse Datenmenge}
+Durch die grosse Datenmenge besteht die Gefahr, dass sehr viel Zeit in die Performance Optimierung investiert werden muss. Sollte dieses Risiko eintreffen, wird es nur sehr schwierig werden einen zufriedenstellenden Editor zu entwickeln.\\
+Eine Massnahme um dieses Risiko möglichst klein zu halten, ist es, die grosse Datenmenge bereits bei der Konzeptionierung des Projektes zu berücksichtigen. Zusätzlich ist es sehr wichtig, möglichst früh die Performance des Prototyps mit grossen Datenmengen zu testen. Dadurch kann sehr schnell eingeschätzt werden, ob dieses Risiko weiterhin besteht oder bereits durch saubere Konzepte beseitigt werden konnte.
+\subsection*{Risiko 2: Aufwändige Backend Implementierung}
+Die Konzeptionierung und Implementation des SimMapEditors konzentriert sich hauptsächlich auf das User Interface. Das Backend soll stark vereinfacht angenommen werden. Jedoch besteht das Risiko, dass ohne komplexeres Backend die grossen Datenmengen auf dem User Interface nicht effizient dargestellt werden können.\\
+Sollte dieses Risiko eintreten, bedeutet dies einen deutlich höheren Aufwand in der Implementation des Backends. Denn ohne der effizienten Darstellung der Daten ist der Nutzen diese Web Applikation nicht sehr gross.

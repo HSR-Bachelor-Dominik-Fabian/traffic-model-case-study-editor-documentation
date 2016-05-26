@@ -29,8 +29,10 @@
 \usepackage{booktabs}
 \usepackage{glossaries}
 \usepackage{mfirstuc}
+\usepackage{setspace}
 \definecolor{lightgrey}{rgb}{.9,.9,.9}
-
+\usepackage[paper=a4paper,textwidth=13.5cm,right=3cm,top=2.5cm]{geometry}
+\onehalfspacing
 
 % Table Stylings
 % http://tex.stackexchange.com/a/13748
@@ -41,6 +43,22 @@
 \newcommand*\afterheading{\midrule}
 \newcommand*\normalline{}
 \newcommand*\lastline{\bottomrule}
+
+
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={xmlns,version,type}% list your attributes here
+}
 
 
 % Titlepage

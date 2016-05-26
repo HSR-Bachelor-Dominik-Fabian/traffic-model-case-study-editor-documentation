@@ -1,33 +1,20 @@
-
 \chapter{Implementation}
-Dies ist ein Test. \cite{Matthews201111}
-\section{XML Verarbeitung}
-\begin{flushleft}
-TODO
-\end{flushleft}
-\section{Tiling der Daten}\label{sec:tilingdataimplementation}
-\begin{flushleft}
+Für die Implementation dieser Bachelorarbeit wurden die in vorherigem Kapitel \ref{ch:konzepte_architektur} beschrieben Konzepte angewendet.
+\section{XML Daten Import}
+Um mit den grossen Datenmengen in den vorhandenen XML Dateien effizient zu arbeiten, müssen diese Daten in eine Datenbank importiert werden. Dafür wurde ein Import Formular im Web Interface integriert, das im Hintergrund die Daten an einen Web Service sendet, der für den Import zuständig ist. Die Daten werden direkt beim Import aufbereitet, sodass die Abfrage der Daten schneller ist.\\
+
+\section{Tiling der Daten}
+\label{sec:tilingdataimplementation}
 TODO (QuadKey, MinLevel)
-\end{flushleft}
 \section{Performanceoptimierungen}
 \subsection{Caching}
-\begin{flushleft}
 TODO
-\end{flushleft}
 \subsection{Neuzeichnung der Daten verhindern}
-\begin{flushleft}
 TODO
-\end{flushleft}
 \subsection{Datenbank Index \& Redundanz}
-\begin{flushleft}
 TODO
-\end{flushleft}
 \section{Infrastruktur}
 \subsection{Docker}
-\begin{flushleft}
 TODO
-\end{flushleft}
 \subsection{Load Balancing}
-\begin{flushleft}
 TODO
-\end{flushleft}

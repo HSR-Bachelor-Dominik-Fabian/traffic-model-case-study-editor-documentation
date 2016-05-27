@@ -1,6 +1,4 @@
 \chapter{Abstract}
-\begin{flushleft}
-TODO
-\end{flushleft}
-
-
+Das Unternehmen Senozon AG ist immer wieder mit Fragestellungen wie \glqq{}Was passiert, wenn diese Strasse gesperrt wird?\grqq{} oder \glqq{}Was passiert, wenn diese Strasse eine andere Geschwindigkeitsbeschränkung hätte?\grqq{} konfrontiert. Um diese Fragestellungen zu beantworten unterhält die Senozon AG ein Modell, das sowohl das Strassennetz als auch privater und öffentlicher Verkehr beinhaltet. Mit Hilfe des OpenSource Simulations Framework MATSim kann dieses Modell simuliert werden.\\
+Die Arbeit \glqq{}Verkehrsmodell-Fallstudien-Editor\grqq{} behandelt die Entwicklung und Implementation einer Web Applikation, die das interaktive Bearbeiten von Daten eines solchen Verkehrsmodells innerhalb einer Karte ermöglicht. Die grosse Herausforderung dabei, ist vorallem der effiziente Umgang mit der grossen Datenmenge. Dafür wird der QuadTile Algorithmus von OpenStreetMap \cite{OSMQuadTiles} eingesetzt. Mit Hilfe dieses Algorithmus können einzelne Bereiche der Weltkarte eindeutig identifiziert werden und den darin enthaltenen Daten aus dem Modell zugeordnet werden. Dies ermöglicht eine skalierte Abfrage der Daten, die zur Anzeige benötigt werden. Diese Optimierung in Zusammenhang mit einigen Indizes ermöglichen eine effiziente Anzeige und Bearbeitung des Verkehrsmodells.\\
+Die fertige Implementation stellt eine performante Web Applikation dar, die im Design der Senozon AG erscheint. Es können Änderungen an den Attributen des Strassennetzes vorgenommen werden, die dann in einem ChangeSet gespeichert werden. Ein ChangeSet beinhaltet lediglich die Abweichungen zu den Stammdaten. Basierend auf diesem ChangeSet ist es  möglich eine FallStudie des Verkehrsmodells für die Simulation zu exportieren.\\

@@ -31,7 +31,7 @@
 \usepackage{mfirstuc}
 \usepackage{setspace}
 \definecolor{lightgrey}{rgb}{.9,.9,.9}
-\usepackage[paper=a4paper,textwidth=13.5cm,right=3cm,top=2.5cm]{geometry}
+\usepackage[paper=a4paper,textwidth=13.5cm,right=3cm,top=2.5cm,hoffset=-0.25in]{geometry}
 \onehalfspacing
 
 % Table Stylings

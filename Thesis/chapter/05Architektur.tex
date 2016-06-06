@@ -22,7 +22,25 @@ Um die Zugriffszeiten der Datenbank zu erhöhen, werden die Daten beim Importier
 \subsection{Changeset}
 Um Daten der User abzuspeichern wurde ein Konzept entwickelt, mit welchem erreicht werden soll, dass Daten gespeichert werden können ohne die Stammdaten anzupassen. Wenn für jeden User die Stammdaten kopiert werden müssten, würde das zu einer unnötigen Vergrösserung der Datenmenge führen. Dadurch wurde das Changeset Konzept entwickelt. Changesets erlauben es, Änderungen aufzuteilen und nur die Differenz zu den Stammdaten abzulegen. Dadurch wird es ermöglicht die Zugriffszeiten auf die Stammdaten konstant zu halten. Das Changeset ist als Abbild der Stammdaten aufgebaut. Dabei werden jedoch nur Felder gespeichert, welche sich zu den Stammdaten unterscheiden. Da ein Changeset nicht direkt Stammdaten enthält werden Änderungen an den Stammdaten übernommen, so fern sie nicht durch das Changeset bearbeitet wurden.
 \subsection{UI-Konzept}
-TODO
+Das Ziel für den Verkehrsmodell-Fallstudien Editor ist es, dass Tool dem Kunden übergeben zu können und dann die von Ihm erstellen Aufträge zu simulieren. Ebenfalls sollten Mitarbeiter von Senozon die Softwarelösung ohne grosse Einarbeitungszeit verstehen können. Um diesen Anforderungen zu entsprechen, musste die Benutzeroberfläche möglichst intuitiv konzeptioniert und implementiert werden. Als Inspirationsquelle für das User Handling wurde Google Maps \cite{GoogleMaps}, sowie der ID Editor \citep{IDEditor} von OpenstreetMap verwendet.
+\newpage
+\subsubsection{Google Maps}
+Google Maps ist eines der weit verbreitetsten Kartensysteme. Dadurch sind sich die User an das Handling von Google Maps gewöhnt und Systeme mit ähnlichen Aufbau sind intuitiv. Die Vorteile des System von Google Map ist die intuitive Bedienung, gekoppelt an ein einfaches, aufgeräumtes und leichten Design.
+\begin{figure}[H]
+\centering
+\includegraphics[height=7cm]{images/AnalyseGoogle.png}
+\caption{Analyse Google Maps}
+\label{fig:googlemaps}
+\end{figure}
+\noindent
+Die Abbildung \ref{fig:googlemaps} \nameref{fig:googlemaps} zeigt die Analyse von Google Maps. Die Karte bei Google Maps erhält sehr viel Platz und alle Controls werden um den Hauptbereich der Karte herum angeordnet. Dadurch wird der User nicht von der Kernaufgabe der Seite abgelenkt. Bei kleineren Karten fühlt sich der User schneller eingegrenzt muss mehr aufwand in Scrolling investieren, was stören kann. Das User Interface passt sich laufend an die Nutzung des Users an. Wenn der User also fertig ist, ein Ort zu finden und eine Route berechnen will, wird das Menü für die Route seitlich eingeblendet. Dadurch wird der Karte Platz weggenommen, welcher jedoch nicht mehr benötigt wird, da der User eine Route berechnen will. Um Platz für die Controls zu sparen, werden viele Symbole anstatt Text eingesetzt.
+\subsubsection*{Ergebnisse Analyse}
+Die Analyse von Google Maps ergab folgende Punkte, welche in das Design des Verkehrsmodell-Fallstudien Editor einfliessen sollen:
+\begin{itemize}
+\item Der Karte viel Platz einräumen.
+\item Menüs, welche nicht dem aktuellen Use Case entsprechen, ausblenden.
+\item Viele Symbole, wenig Text.
+\end{itemize}
 \section{Architektur}
 \begin{figure}[H]
 \centering

@@ -1,9 +1,9 @@
 \chapter{Problemstellung}
-Immer wieder kommen Kunden der Senozon AG mit Fragestellungen wie \glqq{}Was passiert, wenn diese Strasse gesperrt wird?\grqq{} oder \glqq{}Was passiert, wenn da ein Neubaugebiet mit 5000 Einwohnern gebaut wird?\grqq{}. Bislang sind diese Fragestellungen mit viel Handarbeit verbunden, um das Modell anzupassen. Dies insbesondere, weil die Simulationsdaten von MATSim XML basiert und meist sehr gross sind.\\
-Zur Zeit kann lediglich die Senozon AG selbst die Änderungen an den Verkehrsmodellen vornehmen weil dies nur mit dem entsprechenden Know-How und der entsprechenden Erfahrung möglich ist. Das Entwickeln einer Web Applikation, soll diese Funktion zukünftig auch dem Kunden auf eine einfache Art und Weise zur Verfügung stellen. Dies würde die Arbeit von Senozon deutlich erleichtern, weil dann die Kunden selbst oder mit Unterstützung von Senozon AG ihre Daten für die Simulation aufbereiten können. Ziel dieses Arbeit ist es die Konzepte und grössten Risiken einer solche Web Applikation, die das bearbeiten eines Verkehrsmodells ermöglicht, zu analysieren. Zudem wurde ein Prototyp erstellt, der die erkannten Risiken beseitigte und die wichtigsten Konzepte bereits umgesetzt hat.\\
+Immer wieder kommen Kunden der Senozon AG mit Fragestellungen wie \glqq{}Was passiert, wenn diese Strasse gesperrt wird?\grqq{} oder \glqq{}Was passiert, wenn da ein Neubaugebiet mit 5000 Einwohnern gebaut wird?\grqq{}. Bislang sind diese Fragestellungen mit viel Handarbeit verbunden, um das Modell anzupassen. Dies insbesondere, weil die Simulationsdaten von MATSim XML-basiert und meist sehr gross sind.\\
+Zur Zeit kann lediglich die Senozon AG selbst die Änderungen an den Verkehrsmodellen vornehmen, weil dies nur mit dem entsprechenden Know-How und der entsprechenden Erfahrung möglich ist. Das Entwickeln einer Web Applikation soll diese Funktion zukünftig auch dem Kunden auf eine einfache Art und Weise zur Verfügung stellen. Dies würde die Arbeit von Senozon deutlich erleichtern, weil dann die Kunden selbst oder mit Unterstützung von Senozon AG ihre Daten für die Simulation aufbereiten können. Ziel dieses Arbeit ist es, die Konzepte und grössten Risiken einer solche Web Applikation, die das Bearbeiten eines Verkehrsmodells ermöglicht, zu analysieren. Zudem wurde ein Prototyp erstellt, der die erkannten Risiken beseitigt und die wichtigsten Konzepte bereits umsetzt.\\
 \section{Simulationdaten}
-Die Simulationssoftware MATSim arbeitet mit dateibasierten Simulationsdaten. D.h. alle benötigten Daten für die Simulation werden in XML Dateien zur Verfügung gestellt. Diese XML Dateien können bis zu mehreren GigaBytes gross werden, wenn es sich um grössere Netzwerke, wie z.B. das Netz der gesamten Schweiz oder Deutschland, handelt.\\
-Das Verkehrsmodell Netzwerk, welches der relevante Teil der Daten für unsere Arbeit darstellt, besteht wie in Abbildung \ref{example_street} dargestellt, aus mehreren Nodes, welche Punkte auf der Karte darstellen und Links, welche die Verbindung zwischen zwei Nodes darstellen.\\
+Die Simulationssoftware MATSim arbeitet mit dateibasierten Simulationsdaten, d.h. alle benötigten Daten für die Simulation werden in XML Dateien zur Verfügung gestellt. Diese XML Dateien können bis zu mehreren Gigabytes gross werden, wenn es sich um grössere Netzwerke, wie z.B. das Netz der gesamten Schweiz oder Deutschland, handelt.\\
+Das Verkehrsmodell-Netzwerk, welches der relevante Teil der Daten für unsere Arbeit darstellt, besteht, wie in Abbildung \ref{example_street} dargestellt, aus mehreren Nodes, welche Punkte auf der Karte darstellen, und Links, welche die Verbindung zwischen zwei Nodes darstellen.\\
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/Link_demo_edited.PNG}
@@ -29,11 +29,11 @@ Ein Link stellt somit eine klassische Strasse aus dem Verkehrsnetz dar. Im Verke
 	modes="car"
 />
 \end{lstlisting}
-\caption{XML Beispiel Daten einer Strasse}
+\caption{XML Beispieldaten einer Strasse}
 \label{street_details}
 \end{figure}
 \noindent
-Für die Bearbeitung dieser Daten verwendet die Senozon AG zur Zeit eine Client Applikation, die direkt mit den XML Dateien arbeitet. Dies führt dazu, dass diese Applikation sehr Arbeitsspeicher intensiv ist um trotzdem performant zu sein. Daher ist diese Applikation nicht für den Einsatz beim Kunden vor Ort geeignet.
+Für die Bearbeitung dieser Daten verwendet die Senozon AG zur Zeit eine Client Applikation, die direkt mit den XML Dateien arbeitet. Dies führt dazu, dass diese Applikation sehr Arbeitsspeicherintensiv ist, um trotzdem performant zu sein. Daher ist diese Applikation nicht für den Einsatz beim Kunden vor Ort geeignet.
 \section{Änderungsmanagement}
 Die bisherigen Änderungen an einem Verkehrsmodell wurden direkt an den vorhandenen Stammdaten vorgenommen. Dies führt dazu, dass die Stammdaten redundant in verschiedenen Verkehrsmodellen vorhanden sind. Dadurch müssen bei Änderungen der Stammdaten immer wieder alle Verkehrsmodelle überarbeitet werden.\\
-In der Web Applikation sollen alle Benutzer mit den selben Stammdaten arbeiten können, und nur die Änderungen individuell abgespeichert werden. Dadurch wird der benötigte Speicherplatz deutlich verringert und auch die Änderung der Stammdaten stellt somit kein Problem mehr dar.\\
+In der Web Applikation sollen alle Benutzer mit denselben Stammdaten arbeiten können und nur die Änderungen individuell abgespeichert werden. Dadurch wird der benötigte Speicherplatz deutlich verringert und auch die Änderung der Stammdaten stellt somit kein Problem mehr dar.\\

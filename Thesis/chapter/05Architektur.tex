@@ -2,7 +2,7 @@
 \label{ch:konzepte_architektur}
 \section{Konzepte}
 Für die Bewältigung der Anforderungen an die Softwarelösung wurden einige Konzepte entwickelt, welche Einfluss auf die einzelnen Komponenten und die Architektur genommen haben. Die Softwarelösung soll wie unter \ref{ch:anforderungen_section} \nameref{ch:anforderungen_section} beschrieben, die Möglichkeit bieten eine Karte darzustellen, auf welcher die Simulationsdaten dargestellt werden und bearbeitet werden können. Die Bearbeitung sollte jedoch keinen Einfluss auf die Stammdaten haben. Diese Konzepte werden in den folgenden Kapiteln beschrieben.\\
-TODO
+\textbf{\textit{TODO}}
 Um die Anforderungen (siehe. \ref{ch:anforderungen_section}) an die Softwarelösung zu bewältigen, wurden Konzepte für die einzelnen Komponenten entwickelt, welche Einfluss auf die Architektur haben.
 \subsection{Datentiles}
 \label{ch:datentiles}
@@ -22,7 +22,72 @@ Um die Zugriffszeiten der Datenbank zu erhöhen, werden die Daten beim Importier
 \subsection{Changeset}
 Um Daten der User abzuspeichern wurde ein Konzept entwickelt, mit welchem erreicht werden soll, dass Daten gespeichert werden können ohne die Stammdaten anzupassen. Wenn für jeden User die Stammdaten kopiert werden müssten, würde das zu einer unnötigen Vergrösserung der Datenmenge führen. Dadurch wurde das Changeset Konzept entwickelt. Changesets erlauben es, Änderungen aufzuteilen und nur die Differenz zu den Stammdaten abzulegen. Dadurch wird es ermöglicht die Zugriffszeiten auf die Stammdaten konstant zu halten. Das Changeset ist als Abbild der Stammdaten aufgebaut. Dabei werden jedoch nur Felder gespeichert, welche sich zu den Stammdaten unterscheiden. Da ein Changeset nicht direkt Stammdaten enthält werden Änderungen an den Stammdaten übernommen, so fern sie nicht durch das Changeset bearbeitet wurden.
 \subsection{UI-Konzept}
-TODO
+Das UI ist eine zentrale Komponente des Verkehrsmodell-Fallstudien-Editor. Daher muss ein einfaches und intuitives Konzept entwickelt werden, welches wenig Einarbeitungszeit braucht. Als Inspirationsquelle für das User Handling wurde Google Maps \cite{GoogleMaps}, sowie der ID Editor \citep{IDEditor} von OpenStreetMap verwendet, da sie zwei weit verbreitete und oft genutzte Anwendungen sind, welche ein durchdachtes Design besitzen.\\[0.8cm]
+\textbf{evtl. TODO Hauptaufgaben des UI Darstellen (evtl mit Grafik)}
+\newpage
+\subsubsection{Google Maps}
+Google Maps ist eines der weit verbreitetsten Kartensysteme. Dadurch sind sich die User an das Handling von Google Maps gewöhnt und Systeme mit ähnlichen Aufbau sind intuitiv. Die Vorteile des System von Google Map ist die intuitive Bedienung, gekoppelt an ein einfaches, aufgeräumtes und leichten Design.
+\begin{figure}[H]
+\centering
+\includegraphics[height=7cm]{images/AnalyseGoogle.png}
+\caption{Analyse Google Maps}
+\label{fig:googlemaps}
+\end{figure}
+\noindent
+Die Abbildung \ref{fig:googlemaps} \nameref{fig:googlemaps} zeigt die Analyse von Google Maps. Die Karte bei Google Maps erhält sehr viel Platz und alle Controls werden um den Hauptbereich der Karte herum angeordnet. Dadurch wird der User nicht von der Kernaufgabe der Seite abgelenkt. Bei kleineren Karten fühlt sich der User schneller eingegrenzt muss mehr aufwand in Scrolling investieren, was stören kann. Das User Interface passt sich laufend an die Nutzung des Users an. Wenn der User also fertig ist, ein Ort zu finden und eine Route berechnen will, wird das Menü für die Route seitlich eingeblendet. Dadurch wird der Karte Platz weggenommen, welcher jedoch nicht mehr benötigt wird, da der User eine Route berechnen will. Um Platz für die Controls zu sparen, werden viele Symbole anstatt Text eingesetzt.
+\subsubsection*{Ergebnisse Analyse}
+Die Analyse von Google Maps ergab folgende Punkte, welche in das Design des Verkehrsmodell-Fallstudien Editor einfliessen sollen:
+\begin{itemize}
+\item Der Karte viel Platz einräumen.
+\item Menüs, welche nicht dem aktuellen Use Case entsprechen, ausblenden.
+\item Viele Symbole, wenig Text.
+\end{itemize}
+\newpage
+\subsubsection{ID Editor}
+Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. Er bietet die Möglichkeit Daten von OpenStreetMap direkt auf einer Karte zu bearbeiten. Die Änderungen werden dann als Changeset an OpenStreetMap übertragen und freigeschaltet. Da die Funktionen des ID Editor sehr ähnlich wie die Funktionen des Verkehrsmodell-Fallstudien Editor sind, wurde das UI des ID Editor ebenfalls analysiert.
+\begin{figure}[H]
+\centering
+\includegraphics[height=7cm]{images/AnalyseIDEditor.png}
+\caption{Analyse ID Editor}
+\label{fig:ideditor}
+\end{figure}
+\noindent
+In der Abbildung \ref{fig:ideditor} \nameref{fig:ideditor} wird die Analyse des ID Editor gezeigt. Um die Datenmenge, welche OpenStreetMap für die Kartenerstellung braucht, verwalten zu können, ist ein wichtiges Element des User Interface, dass die Daten erst dargestellt werden, wenn der User nahe genug herangezoomed hat. Dies ermöglicht es dem ID Editor die Datenmenge, welche zur selben Zeit dargestellt werden soll, auf ein Minimum zu reduzieren. Das Editormenü des ID Editor ist so aufgebaut, dass eine Strasse angeklickt wird und die Strasse dann in einem Sidepanel dargestellt wird. Dabei wird die Karte nicht ausgeblendet, was eine leichte und schnelle Bedienung für den User ermöglicht. Weiter besitzt der ID Editor eine gute Undo- / Redofunktion. Änderungen welche an Objekten vorgenommen werden, können einfach wieder rückgängig gemacht werden.
+\subsubsection*{Ergebnisse Analyse}
+Für das Design-Konzept des Verkehrsmodell-Fallstudien Editor ergeben sich folgende Punkte aus der Analyse:
+\begin{itemize}
+\item Kein Wechsel der Website zur Bearbeitung von Strassenattributen.
+\item Strassen durch anklicken bearbeiten.
+\item Undo- /Redofunktion.
+\end{itemize}
+\newpage
+\subsubsection{Detail Konzept}
+Aus den Erkenntnissen der Analyse von Google Maps und dem ID Editor wurde ein Konzept für das UI des Verkehrsmodell-Fallstudien Editor entwickelt.
+\begin{figure}[H]
+\centering
+\includegraphics[height=7cm]{images/KonzeptUI.png}
+\caption{Wireframe Editor}
+\label{fig:conceptui}
+\end{figure}
+\noindent
+Das Userinterface wird, angelehnt an Google Maps, eine Karte besitzen, welche den Browser ausfüllt. Menüs welche nicht gebraucht werden sind, wie in Abbildung \ref{fig:conceptui} \nameref{fig:conceptui} dargestellt, ausgeblendet. Dadurch hat der User viel Platz, um die Strasse zu suchen, welche für ihn relevant ist. Strassen welche ausgewählt werden, öffnen ein Menü welches von der Seite eingeblendet wird, in welchem die Daten bearbeitet werden können (sh. Abbildung \ref{fig:concepteditStreet} \nameref{fig:concepteditStreet}). Weiter bietet die Software eine Undo- / Redofunktion.
+\begin{figure}[H]
+\centering
+\includegraphics[height=7cm]{images/KonzeptEditStreet.png}
+\caption{Wireframe Strassenattribute bearbeiten}
+\label{fig:concepteditStreet}
+\end{figure}
+\noindent
+\newpage
+Um die Wegführung einer Strasse zu bearbeiten kann der User einen Editiermodus starten. In diesem kann er eine Strasse anklicken und die Führung der Strasse in einem Menü verändern. Die Nodes welche dazu benötigt werden, werden aus Performancegründen nur im Editiermodus angezeigt. 
+\begin{figure}[H]
+\centering
+\includegraphics[height=7cm]{images/KonzeptChangeStreet.PNG}
+\caption{Wireframe Strassenführung bearbeiten}
+\label{fig:concepteditStreet}
+\end{figure}
+\noindent
+Ein weiteres naheliegendes Konzept für die Bearbeitung der Strassenführung, wäre ein Drag and Drop verfahren. Dieses Konzept wäre für den User am naheliegendsten, ist jedoch sehr zeitintensiv in der Implementation. Aus Zeitgründen musste dadurch auf Drag and Drop verzichtet werden.
 \section{Architektur}
 \begin{figure}[H]
 \centering

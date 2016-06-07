@@ -7,7 +7,7 @@ Um mit den grossen Datenmengen in den vorhandenen XML Dateien effizient zu arbei
 Während des Imports werden zwei verschiedene Vorberechnungen durchgeführt. Mit Hilfe dieser vorbereiteten Informationen ist es möglich, effizienter die Daten zu filtern. Dadurch wird die Antwortzeit einer Anfrage deutlich verkürzt.
 \subsection{QuadKey}
 Die erste Vorbereitung ist die Berechnung des QuadKeys. Wie in Kapitel \ref{ch:datentiles} \nameref{ch:datentiles} beschrieben, können mit Hilfe des QuadKey einzelne Bereiche der Welt eindeutig identifiziert werden. Wenn nun eine Anfrage an den Server gesendet wird, in der die Daten eines spezifischen QuadTiles angefordert werden, müssen die Links ebenfalls einen QuadKey besitzen um danach zu filtern. Dafür werden die QuadKeys der beiden Nodes berechnet, die zu einem Link gehören. Der gemeinsame Prefix stellt nun den kleinst möglichen QuadKey dar, in den der gesamte Link hineinpasst.\\
-Wie in Abbildung \ref{pic:example_quadtile} bei Link 2 ersichtlich, kann sich eine Strasse auch in einem QuadTile befinden, ohne dass sich beide Nodes in diesem Quadtile befinden. In diesem Beispiel hat Link 1 einen QuadKey von 010 und Link 2 von 01. Damit nun der Link 2 bei einer Abfrage der Daten des QuadTiles 010 auch mitgeliefert wird, müssen alle Strassen, die eine QuadKey besitzen, der einen Prefix des angeforderten QuadKeys darstellt, auch mitgeliefert werden. D.h. dass nun für die Abfrage des QuadTiles 010 alle Strassen, die den QuadKey 010, 01 oder 0 besitzen mitgeliefert werden. Dadurch ist sichergestellt, dass alle Strassen, die in diesem QuadTile sichbar sind, mitgeliefert werden.
+Wie in Abbildung \ref{pic:example_quadtile} bei Link 2 ersichtlich, kann sich eine Strasse auch in einem QuadTile befinden, ohne dass sich beide Nodes in diesem Quadtile befinden. In diesem Beispiel hat Link 1 einen QuadKey von 010 und Link 2 von 01. Damit nun der Link 2 bei einer Abfrage der Daten des QuadTiles 010 auch mitgeliefert wird, müssen alle Strassen, die eine QuadKey besitzen, der einen Prefix des angeforderten QuadKeys darstellt, auch mitgeliefert werden. D.h. dass nun für die Abfrage des QuadTiles 010 alle Strassen, die den QuadKey 010, 01, 0 oder sogar einen leeren QuadKey \glqq{}\grqq{} besitzen mitgeliefert werden.
 \begin{figure}[H]
 \centering
 \includegraphics[height=9cm]{images/QuadTile_example.PNG}
@@ -16,7 +16,9 @@ QuadKey Link 1: 010\\QuadKey Link 2: 01
 \label{pic:example_quadtile}
 \end{figure}
 \noindent
-TODO: Vorteil \& Nachteil dieser Technik diskutieren.
+Der QuadKey ist eine sehr gute Technik, um die Daten auf der Karte zu adressieren und dadurch eine Filterung der Daten durchzuführen. Zudem hat diese Technik den Vorteil, dass sichergestellt ist, das alle Links, die auf einem gewissen QuadTile ersichtlich sind, sicher mitgeliefert werden.\\
+Ein Nachteil dieser Technik ist es, dass bei höheren Zoomlevels Daten mitgeliefert werden, die bei einem vorherigen QuadTile bereits mitgeliefert wurden. Das User Interface verhindert zwar das neu Zeichnen von Duplikaten, jedoch werden dadurch viele Daten übertragen, die bereits gezeichnet sind und dadurch überflüssig sind.
+\newpage
 \subsection{MinLevel}
 Zusätzlich zu dem QuadKey wird beim Import noch für jeden Link der Mindest-Level (MinLevel) berechnet. Denn nur mit dem QuadKey würden alle Strassen in der aktuell angezeigten Bounding Box geladen werden, auch die eher kleineren Nebenstrassen. Aus diesem Grund wird beim Import ein MinLevel berechnet, der besagt, ab welchem Zoom Level in der Karte diese Strasse geladen wird. Dadurch ist es möglich eine Strasse nach ihrer Wichtigkeit zu gewichten und erst ab einem bestimmten Zoomlevel anzuzeigen. \\
 Bei der Berechnung dieses Mindest-Levels wird in erster Linie auf die maximale  Geschwindigkeit geachtet. Die Geschwindigkeit sagt sehr viel über die Wichtigkeit der Strasse selbst aus. Eine Strasse mit einer hohen maximalen Geschwindigkeit, wie z.B. eine Autobahn, wird in diesem System als wichtig erachtet und dadurch bereits auf einem niedrigeren Zoomlevel angezeigt. Beim Level 10 und 14 wurden noch weitere Kriterien verwendet um eine feinere Skalierung zu erhalten.\\
@@ -31,8 +33,8 @@ Level 15 & => & Geschwindigkeit > 13 m/s \\
 Level 16 & => & Der Rest \\ 
 \end{tabular} 
 \section{Performance Optimierungen}
-Die Performance ist ein sehr wichtiger Faktor in dieser Arbeit. Ohne starke Performance kann die grosse Datenmenge in diesem Projekt nicht effizient dargestellt werden. Dies führte dazu, dass einiges an Zeit in die Performance Optimierung investiert wurde.\\
-TODO: Performance Probleme beim rendern und nicht beim daten abfragen
+Die Performance ist ein sehr wichtiger Faktor in dieser Arbeit. Ohne starke Performance kann die grosse Datenmenge in diesem Projekt nicht effizient dargestellt werden. Aufgrund dessen, wurde einiges an Zeit in die Optimierung investiert. Zwei wichtige Faktoren haben grossen Einfluss auf die Performance dieser Web Applikation. Zum einen ist dies die Antwortzeit der einzelnen Abfragen der Daten. Diese Antwortzeit konnte durch mehrere Optimierungen, die in diesem Kapitel genauer beschrieben werden, deutlich verbessert werden. Dadurch konnten die nicht-funktionalen Anforderungen aus dem Kapitel \ref{ch:NFRs} eingehalten werden.\\
+Ein weiterer grosser Faktor ist das Rendering der Daten im Browser. In höheren Zoomlevels werden bis zu mehreren Tausend Links und Nodes im Browser dargestellt. Der Browser benötigt für das Rendering doch eine gewisse Zeit, auf die der Entwickler keinen grossen Einfluss hat. Es kann lediglich darauf geachtet werden, dass keine redundante Informationen vom Browser gerendert werden müssen.
 \subsection{Caching}
 Für die Anzeige der Strassen und Nodes werden sehr viele Daten übertragen. Damit die Daten bei mehrmaligem Anfragen nicht jedes Mal übertragen werden müssen, wird Clientseitiges Caching eingesetzt.\\
 Der Server gibt dem Client vor, wie er die Daten zwischenspeichern soll. Dafür wird bei jeder Antwort eine maximales Alter der Daten gesetzt. Wie in Abbildung \ref{pic:browser_cache} ersichtlich, speichert der Client die Daten in seinen lokalen Zwischenspeicher (Cache) und verwendet diese, solange das maximale Alter von einer Stunde noch nicht erreicht ist. Dies macht Sinn, weil sich die Stammdaten des Verkehrsmodells nur sehr selten ändern. Erst nach Auflauf dieser Stunde sendet der Browser erneut eine Anfrage an der Server.
@@ -54,10 +56,7 @@ Jede Antwort, die zuvor an den Client gesendet wurde, wird mit diesem HTTP Entit
 \noindent
 Durch dieses Verfahren ist sichergestellt, dass das Übertragen von Daten möglichst reduziert wird und dadurch viel Performance gewonnen wird. Diese gewonnene Performance wird erst beim längeren Verwenden der Applikation ersichtlich, sobald bereits geladene Daten nicht mehr erneut geladen werden müssen.
 \subsection{Erneutes Zeichnen}
-Die verwendete Library \glqq{}Leaflet GeoJSON Tile Layer\grqq{} \cite{LeafletGeoJSON} war standardmässig so programmiert, dass die Daten auf jedem Zoom Level neu gezeichnet werden. 
-
-
-zeichnet standardmässig alle Daten, die auf den verschiedenen Zoomlevel angefordert werden immer wieder neu. Dies war jedoch ein grosser Performanceverlust. Dafür wurde die Library umprogrammiert, sodass zuerst überprüft wird, ob eine Strasse bereits auf dem vorhergehendem Zoomlevel gezeichnet wurde. Ist dies der Fall wird diese nicht mehr neu gezeichnet sondern bleibt bestehen.
+Die verwendete Library \glqq{}Leaflet GeoJSON Tile Layer\grqq{} \cite{LeafletGeoJSON}, die für das Abfragen der Daten in Tiles verantwortlich ist, ist standardmässig so entwickelt, dass die Daten auf jedem Zoom Level neu gezeichnet werden. Im Rahmen dieser Arbeit wurde die Funktionalität erweitert, sodass die Strassen beim hineinzoomen bestehen bleiben und lediglich die neuen Strasse dazu gezeichnet werden. Ebenfalls wurde die Library so angepasst, dass  beim herauszoomen alle Strassen, die auf einem höheren Zoomlevel gezeichnet wurden, wieder entfernt werden. Dafür werden alle Schlüssel der gezeichneten Strassen mit dem dazugehörigen Zoomlevel, auf dem sie gezeichnet wurden, in eine Map< Zoomlevel, List<Schlüssel> > abgelegt. Dadurch kann die Library beim herauszoomen alle Schlüssel, die zu einem Zoomlevel gehören, löschen.
 \subsection{Datenbank Index \& Redundanz}
 TODO
 \section{Handler}
@@ -68,6 +67,7 @@ evtl. TODO
 evtl. TODO
 \subsection{ChangesetStorageHandler}
 evtl. TODO
+\section{UI - Implementation}
 \section{Testing}
 \section{Infrastruktur}
 TODO

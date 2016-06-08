@@ -32,16 +32,36 @@ Level 14 & => & Geschwindigkeit > 13 m/s und Kapazität >= 4000  \\
 Level 15 & => & Geschwindigkeit > 13 m/s \\ 
 Level 16 & => & Der Rest \\ 
 \end{tabular} 
+\newpage
 \section{UI - Implementation}
-TODO
-\subsection{Handler}
-evtl. TODO
-\subsubsection{UndoRedoHandler}
-evtl. TODO
-\subsubsection{ChangesetHandler}
-evtl. TODO
-\subsubsection{ChangesetStorageHandler}
-evtl. TODO
+Das User Interface des Verkehrsmodell-Fallstudien-Editor muss einigen Anforderungen entsprechen. Diese werden im Kapitel \ref{sec:uiconcept} \nameref{sec:uiconcept} beschrieben. Die Implementation des UI wird mit Javascript durchgeführt. Die Javascript Web Application wird als Single Page Anwendung konzipiert und implementiert. Dabei muss der User nie die Seite wechseln, sondern alle benötigten Elemente werden laufend nachgeladen und dann dargestellt. Dadurch wird die User Experience flüssiger. Implementiert wird dies, in dem die Web App aufgeteilt wird in eine Hauptview und Partial Views (Teilviews) welche einen spezifischen Teil der Website beinhalten. Die Partial Views werden im Play Framework erfasst und als Route konfiguriert. Mittels Javascript wird eine Partial View angefordert und in ein Container geladen. Die Abbildung \ref{fig:mainviewpartialview} zeigt den Aufbau des User Interface mit einer eingezeichneten Partial View.
+\begin{figure}[H]
+\centering
+\includegraphics[height=6cm]{images/MainviewPartialview.PNG}
+\caption{UI mit eingezeichneter Partial View}
+\label{fig:mainviewpartialview}
+\end{figure}
+\noindent
+Wie in Abbildung \ref{fig:mainviewpartialview} ersichtlich wurde das Konzept von Google Maps (sh. \ref{sec:detailuiconcept}) erfolgreich implementiert und der Karte dadurch viel Platz ermöglicht. Für die Karte wurde das Framework Leaflet\cite{Leaflet}, sowie d3.js\cite{D3JS} verwendet. In der Kombination erlauben diese Frameworks die Erstellung einer Karte, mit beliebigem Kartenmaterial im Hintergrund. Für die Projektarbeit wurde ein eigenes Kartendesign über Mapbox\cite{Mapbox} erstellt. Um neben der Karte eine Schicht mit den Daten aus dem Verkehrsmodell darzustellen, musste eine Extension für Leaflet verwendet werden. TileLayer GeoJSON \cite{LeafletGeoJSON} ermöglicht es eine Schicht aufzubauen, welche die Daten für die Darstellung von einer URL nach dem OpenStreetMap Schema (x, y , zoom) anfordert und dabei GeoJSON als Format erwartet. Diese Library wurde verwendet und auf die Anforderungen für den Verkehrsmodell-Fallstudien-Editor angepasst. Mit Hilfe dieser Libray konnte das Konzept des Tiling der Daten (sh. \ref{ch:datentiles} \nameref{ch:datentiles}) auf die Oberfläche eingeführt werden.
+\newpage
+\noindent
+Für die Interaktionen mit den einzelnen Editoren (z.B. für die Strassenattribute) wird AngularJS\cite{AngularJS} Version 1 verwendet. AngularJS erlaubt es, Models auf Clientseite einzubinden, welche über Bindings aktualisiert werden. Dies vereinfacht die Interaktionen mit Datenfeldern. Wenn eine Strasse angeklickt wird, wird über AngularJS die Strasse in das Edit-Menü geladen und das Menü geöffnet (sh. Abbildung \ref{fig:editstreetattributes}).
+\begin{figure}[H]
+\centering
+\includegraphics[height=6cm]{images/EditStreetattributes.PNG}
+\caption{UI mit geöffnetem Editor für Strassenattribute}
+\label{fig:editstreetattributes}
+\end{figure}
+\noindent
+Um die Streckenführung einer Strasse zu bearbeiten, wurde ein Bearbeiten-Modus eingeführt. Wenn dieser aktiviert wird, werden neu neben den Strassen auch Nodes auf der Karte dargestellt. Da die Datenmenge durch diesen Schritt stark erhöht wird, werden die Nodes und Links erst in einer höheren Zoomstufe dargestellt. Um dann die Streckenführung zu editieren, kann man eine Strasse anklicken, wobei sich ein Fenster öffnet. In diesem Fenster kann der Start und Endpunkt der Strasse mittels Klick auf den entsprechenden Node bearbeitet werden (Abbildung \ref{fig:editstreetdirection}.
+\begin{figure}[H]
+\centering
+\includegraphics[height=6cm]{images/EditStreetdirection.PNG}
+\caption{UI mit geöffnetem Editor für Strassenführung}
+\label{fig:editstreetdirection}
+\end{figure}
+\noindent
+Änderungen welche über den Attribut- /Strassenführungseditor erstellt werden, werden auf einem Undo-Stack abgelegt. Dadurch können Änderungen über eine Undo-Funktion wieder rückgängig gemacht werden und über ein Redo wiederhergestellt werden. Das Changeset, sowie der Undo- und Redo-Stack sind im Session Storage des Browser abgelegt. Dies erlaubt dem Benutzer, dass seine Änderungen so lange gespeichert sind, wie die Browser Session offen ist. Wird der Browser geschlossen, so sind die Änderungen verloren, ausser der Benutzer hat sie vorher gespeichert. Der Vorteil des Session Storage liegt jedoch dabei, dass ein Benutzer die Seite neu laden kann oder ein Tab schliessen kann, ohne das seine Änderungen sofort verloren sind.
 \section{Performance Optimierungen}
 Die Performance ist ein sehr wichtiger Faktor in dieser Arbeit. Ohne starke Performance kann die grosse Datenmenge in diesem Projekt nicht effizient dargestellt werden. Aufgrund dessen, wurde einiges an Zeit in die Optimierung investiert. Zwei wichtige Faktoren haben grossen Einfluss auf die Performance dieser Web Applikation. Zum einen ist dies die Antwortzeit der einzelnen Abfragen der Daten. Diese Antwortzeit konnte durch mehrere Optimierungen, die in diesem Kapitel genauer beschrieben werden, deutlich verbessert werden. Dadurch konnten die nicht-funktionalen Anforderungen aus dem Kapitel \ref{ch:NFRs} eingehalten werden.\\
 Ein weiterer grosser Faktor ist das Rendering der Daten im Browser. In höheren Zoomlevels werden bis zu mehreren Tausend Links und Nodes im Browser dargestellt. Der Browser benötigt für das Rendering doch eine gewisse Zeit, auf die der Entwickler keinen grossen Einfluss hat. Es kann lediglich darauf geachtet werden, dass keine redundante Informationen vom Browser gerendert werden müssen.

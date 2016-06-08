@@ -1,5 +1,5 @@
 \chapter{Implementation}
-Für die Implementation dieser Bachelorarbeit wurden die in vorherigem Kapitel \ref{ch:konzepte_architektur} beschrieben Konzepte angewendet.
+Für die Implementation dieser Bachelorarbeit wurden die in vorherigem Kapitel \ref{ch:konzepte_architektur} \nameref{ch:konzepte_architektur} beschrieben Konzepte angewendet.
 \section{XML Daten Import}
 Um mit den grossen Datenmengen in den vorhandenen XML Dateien effizient zu arbeiten, müssen diese Daten in eine Datenbank importiert werden. Dafür wurde ein Import Formular im Web Interface integriert, das im Hintergrund die Daten an einen Web Service sendet, der für den Import zuständig ist. Die Daten werden direkt beim Import aufbereitet, so dass die Abfrage der Daten schneller ist.
 \section{Tiling der Daten}
@@ -34,8 +34,7 @@ Level 16 & => & Der Rest \\
 \end{tabular}
 \newpage
 \section{User Interface - Implementation}
-Wie in Kapitel \ref{sec:uiconcept} beschrieben, muss das User Interface des Verkehrsmodell-Fallstudien-Editor einigen Anforderungen entsprechen. Dieses User Interface wird als Javascript Single Page Anwendung konzipiert und implementiert. Dies hat zum Vorteil, dass der Benutzer die Seite nie wechselt, sondern alle benötigten Elemente laufend nachgeladen werden. Dadurch erhält der Benutzer eine flüssigere User Experience.\\
-Die Web Applikation wird in eine Main View (Haupt-Anzeige) und mehrere Partial Views (Teil-Anzeigen) aufgeteilt. Die Partial Views werden im Play Framework als Route erfasst und mittels Javascript angefordert. Anschliessend werden diese Partial Views in einen Container geladen. Die Abbildung \ref{fig:mainviewpartialview} zeigt den Aufbau des User Interface mit einer eingezeichneten Partial View.
+Wie in Kapitel \ref{sec:uiconcept} \nameref{sec:uiconcept} beschrieben, muss das User Interface des Verkehrsmodell-Fallstudien-Editor einigen Anforderungen entsprechen. Dieses User Interface wird als Javascript Single Page Anwendung konzipiert und implementiert. Dies hat zum Vorteil, dass der Benutzer die Seite nie wechselt, sondern alle benötigten Elemente laufend nachgeladen werden. Dadurch erhält der Benutzer eine flüssigere User Experience. Die Web Applikation wird in eine Main View (Haupt-Anzeige) und mehrere Partial Views (Teil-Anzeigen) aufgeteilt. Die Partial Views werden im Play Framework als Route erfasst und mittels Javascript angefordert. Anschliessend werden diese Partial Views in einen Container geladen. Die Abbildung \ref{fig:mainviewpartialview} zeigt den Aufbau des User Interface mit einer eingezeichneten Partial View.
 \begin{figure}[H]
 \centering
 \includegraphics[height=6cm]{images/MainviewPartialview.PNG}
@@ -61,7 +60,7 @@ Um die Wegführung einer Strasse zu bearbeiten, kann eine Strasse angeklickt wer
 \noindent
 Änderungen welche über den Attribut-  oder Strassenführungseditor erstellt werden, werden auf einem Undo-Stack abgelegt. Dadurch können Änderungen über eine Undo-Funktion wieder rückgängig gemacht werden und über ein Redo wiederhergestellt werden. Das Changeset, sowie der Undo- und Redo-Stack sind im Session Storage des Browser abgelegt. Dadurch gehen die Änderungen nicht verloren, solange die Browser Session noch offen ist. Wird der Browser geschlossen, wird die Session gelöscht und die Änderungen gehen somit verloren. Der Benutzer kann seine Änderungen speichern, sodass sie in der Datenbank persistiert werden. Der Vorteil des Session Storage liegt darin, dass ein Benutzer die Seite neu laden kann oder ein Tab schliessen kann, ohne das seine lokalen Änderungen verloren gehen.
 \section{Performance Optimierungen}
-Die Performance ist ein sehr wichtiger Faktor in dieser Arbeit. Ohne starke Performance kann die grosse Datenmenge in diesem Projekt nicht effizient dargestellt werden. Aufgrund dessen, wurde einiges an Zeit in die Optimierung investiert. Zwei wichtige Faktoren haben grossen Einfluss auf die Performance dieser Web Applikation. Zum einen ist dies die Antwortzeit der einzelnen Abfragen der Daten. Diese Antwortzeit konnte durch mehrere Optimierungen, die in diesem Kapitel genauer beschrieben werden, deutlich verbessert werden. Dadurch konnten die nicht-funktionalen Anforderungen aus dem Kapitel \ref{ch:NFRs} eingehalten werden.\\
+Die Performance ist ein sehr wichtiger Faktor in dieser Arbeit. Ohne starke Performance kann die grosse Datenmenge in diesem Projekt nicht effizient dargestellt werden. Aufgrund dessen, wurde einiges an Zeit in die Optimierung investiert. Zwei wichtige Faktoren haben grossen Einfluss auf die Performance dieser Web Applikation. Zum einen ist dies die Antwortzeit der einzelnen Abfragen der Daten. Diese Antwortzeit konnte durch mehrere Optimierungen, die in diesem Kapitel genauer beschrieben werden, deutlich verbessert werden. Dadurch konnten die nicht-funktionalen Anforderungen aus dem Kapitel \ref{ch:NFRs} \nameref{ch:NFRs} eingehalten werden.\\
 Ein weiterer grosser Faktor ist das Rendering der Daten im Browser. In höheren Zoomlevels werden bis zu mehreren Tausend Links und Nodes im Browser dargestellt. Der Browser benötigt für das Rendering doch eine gewisse Zeit, auf die der Entwickler keinen grossen Einfluss hat. Es kann lediglich darauf geachtet werden, dass keine redundante Informationen vom Browser gerendert werden müssen.
 \subsection{Caching}
 Für die Anzeige der Strassen und Nodes werden sehr viele Daten übertragen. Damit die Daten bei mehrmaligem Anfragen nicht jedes Mal übertragen werden müssen, wird Clientseitiges Caching eingesetzt.\\
@@ -94,11 +93,11 @@ Die Abfrage der Strassen beinhaltet eine LIKE Abfrage von SQL, die das Suchen vo
 Die Daten in der Datenbank sind in eine Tabelle \glqq{}Links\grqq{} und eine Tabelle \glqq{}Nodes\grqq{} aufgeteilt. Bei der Abfrage werden sowohl die Parameter des Links als auch die Koordinaten der dazugehörigen Nodes benötigt. Dafür wurde zu Beginn ein klassischer SQL JOIN verwendet, um die beiden Tabellen miteinander zu verknüpfen. Durch die Analyse des Ausführungsplans wurde ersichtlich, dass dieser JOIN einiges an Zeit in Anspruch nahm. Um diese Zeit einzusparen, werden nun die Koordinaten der beiden Nodes, direkt beim Import der Daten, in die Tabelle der Links mit abgespeichert. Dadurch sind die Koordinaten der Nodes zwar redundant vorhanden, jedoch beschleunigt dies die Abfrage deutlich. Daher wurde die Redundanz der Daten in Kauf genommen.
 \newpage
 \section{Testing}
-TODO
+evtl. TODO
 \subsection{UI - Testing}
-TODO
+evtl. TODO
 \subsection{Service - Testing}
-TODO
+evtl. TODO
 \section{Infrastruktur}
 evtl. TODO
 \subsection{Docker}

@@ -36,7 +36,7 @@ Google Maps ist eines der weit verbreitetsten Kartensysteme. Dadurch sind sich d
 \noindent
 Die Abbildung \ref{fig:googlemaps} \nameref{fig:googlemaps} zeigt die Analyse von Google Maps. Die Karte bei Google Maps erhält sehr viel Platz und alle Controls werden um den Hauptbereich der Karte herum angeordnet. Dadurch wird der User nicht von der Kernaufgabe der Seite abgelenkt. Bei kleineren Karten fühlt sich der User schneller eingegrenzt muss mehr aufwand in Scrolling investieren, was stören kann. Das User Interface passt sich laufend an die Nutzung des Users an. Wenn der User also fertig ist, ein Ort zu finden und eine Route berechnen will, wird das Menü für die Route seitlich eingeblendet. Dadurch wird der Karte Platz weggenommen, welcher jedoch nicht mehr benötigt wird, da der User eine Route berechnen will. Um Platz für die Controls zu sparen, werden viele Symbole anstatt Text eingesetzt.
 \subsubsection*{Ergebnisse Analyse}
-Die Analyse von Google Maps ergab folgende Punkte, welche in das Design des Verkehrsmodell-Fallstudien Editor einfliessen sollen:
+Die Analyse von Google Maps ergab folgende Punkte, welche in das Design des Verkehrsmodell-Fallstudien-Editors einfliessen sollen:
 \begin{itemize}
 \item Der Karte viel Platz einräumen.
 \item Menüs, welche nicht dem aktuellen Use Case entsprechen, ausblenden.
@@ -54,7 +54,7 @@ Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. E
 \noindent
 In der Abbildung \ref{fig:ideditor} \nameref{fig:ideditor} wird die Analyse des ID Editor gezeigt. Um die Datenmenge, welche OpenStreetMap für die Kartenerstellung braucht, verwalten zu können, ist ein wichtiges Element des User Interface, dass die Daten erst dargestellt werden, wenn der User nahe genug herangezoomed hat. Dies ermöglicht es dem ID Editor die Datenmenge, welche zur selben Zeit dargestellt werden soll, auf ein Minimum zu reduzieren. Das Editormenü des ID Editor ist so aufgebaut, dass eine Strasse angeklickt wird und die Strasse dann in einem Sidepanel dargestellt wird. Dabei wird die Karte nicht ausgeblendet, was eine leichte und schnelle Bedienung für den User ermöglicht. Weiter besitzt der ID Editor eine gute Undo- / Redofunktion. Änderungen welche an Objekten vorgenommen werden, können einfach wieder rückgängig gemacht werden.
 \subsubsection*{Ergebnisse Analyse}
-Für das Design-Konzept des Verkehrsmodell-Fallstudien Editor ergeben sich folgende Punkte aus der Analyse:
+Für das Design-Konzept des Verkehrsmodell-Fallstudien-Editors ergeben sich folgende Punkte aus der Analyse:
 \begin{itemize}
 \item Kein Wechsel der Website zur Bearbeitung von Strassenattributen.
 \item Strassen durch anklicken bearbeiten.
@@ -70,16 +70,16 @@ Aus den Erkenntnissen der Analyse von Google Maps und dem ID Editor wurde ein Ko
 \label{fig:conceptui}
 \end{figure}
 \noindent
-Das Userinterface wird, angelehnt an Google Maps, eine Karte besitzen, welche den Browser ausfüllt. Menüs welche nicht gebraucht werden sind, wie in Abbildung \ref{fig:conceptui} \nameref{fig:conceptui} dargestellt, ausgeblendet. Dadurch hat der User viel Platz, um die Strasse zu suchen, welche für ihn relevant ist. Strassen welche ausgewählt werden, öffnen ein Menü welches von der Seite eingeblendet wird, in welchem die Daten bearbeitet werden können (sh. Abbildung \ref{fig:concepteditStreet} \nameref{fig:concepteditStreet}). Weiter bietet die Software eine Undo- / Redofunktion.
+Das Userinterface wird, angelehnt an Google Maps, eine Karte besitzen, welche den Browser ausfüllt. Menüs, welche nicht gebraucht werden, sind, wie in Abbildung \ref{fig:conceptui} \nameref{fig:conceptui} dargestellt, ausgeblendet. Dadurch hat der User viel Platz, die für ihn relevante Strasse zu suchen. Durch das Auswählen einer Strasse, wird ein Menü von der Seite eingeblendet, welches das Bearbeiten der Parameter dieser Strasse erlaubt. (sh. Abbildung \ref{fig:concepteditStreet} \nameref{fig:concepteditStreet}). Zudem bietet die Software eine Undo- / Redofunktion.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/KonzeptEditStreet.png}
 \caption{Wireframe Strassenattribute bearbeiten}
 \label{fig:concepteditStreet}
 \end{figure}
-\noindent
 \newpage
-Um die Wegführung einer Strasse zu bearbeiten kann der User einen Editiermodus starten. In diesem kann er eine Strasse anklicken und die Führung der Strasse in einem Menü verändern. Die Nodes welche dazu benötigt werden, werden aus Performancegründen nur im Editiermodus angezeigt. 
+\noindent
+Um die Wegführung einer Strasse zu bearbeiten kann der User in einen Bearbeitungsmodus wechseln. In dem er dann eine Strasse anklicken kann und die Führung der Strasse in einem Menü verändern. Die dafür benötigten Nodes, werden aus Performancegründen nur im Bearbeitungsmodus geladen und angezeigt.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/KonzeptChangeStreet.PNG}
@@ -87,7 +87,7 @@ Um die Wegführung einer Strasse zu bearbeiten kann der User einen Editiermodus 
 \label{fig:concepteditStreet}
 \end{figure}
 \noindent
-Ein weiteres naheliegendes Konzept für die Bearbeitung der Strassenführung, wäre ein Drag and Drop verfahren. Dieses Konzept wäre für den User am naheliegendsten, ist jedoch sehr zeitintensiv in der Implementation. Aus Zeitgründen musste dadurch auf Drag and Drop verzichtet werden.
+Ein weiteres, naheliegendes Konzept für die Bearbeitung der Strassenführung, wäre ein Drag \& Drop Verfahren. Dieses Konzept wäre für den Benutzer am einfachsten, ist jedoch sehr zeitintensiv in der Implementation. Aus Zeitgründen musste dadurch auf Drag \& Drop verzichtet werden.
 \section{Architektur}
 \begin{figure}[H]
 \centering

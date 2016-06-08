@@ -32,7 +32,6 @@ Level 14 & => & Geschwindigkeit > 13 m/s und Kapazität >= 4000  \\
 Level 15 & => & Geschwindigkeit > 13 m/s \\ 
 Level 16 & => & Der Rest \\ 
 \end{tabular} 
-\newpage
 \section{UI - Implementation}
 Das User Interface des Verkehrsmodell-Fallstudien-Editor muss einigen Anforderungen entsprechen. Diese werden im Kapitel \ref{sec:uiconcept} \nameref{sec:uiconcept} beschrieben. Die Implementation des UI wird mit Javascript durchgeführt. Die Javascript Web Application wird als Single Page Anwendung konzipiert und implementiert. Dabei muss der User nie die Seite wechseln, sondern alle benötigten Elemente werden laufend nachgeladen und dann dargestellt. Dadurch wird die User Experience flüssiger. Implementiert wird dies, in dem die Web App aufgeteilt wird in eine Hauptview und Partial Views (Teilviews) welche einen spezifischen Teil der Website beinhalten. Die Partial Views werden im Play Framework erfasst und als Route konfiguriert. Mittels Javascript wird eine Partial View angefordert und in ein Container geladen. Die Abbildung \ref{fig:mainviewpartialview} zeigt den Aufbau des User Interface mit einer eingezeichneten Partial View.
 \begin{figure}[H]
@@ -43,7 +42,6 @@ Das User Interface des Verkehrsmodell-Fallstudien-Editor muss einigen Anforderun
 \end{figure}
 \noindent
 Wie in Abbildung \ref{fig:mainviewpartialview} ersichtlich wurde das Konzept von Google Maps (sh. \ref{sec:detailuiconcept}) erfolgreich implementiert und der Karte dadurch viel Platz ermöglicht. Für die Karte wurde das Framework Leaflet\cite{Leaflet}, sowie d3.js\cite{D3JS} verwendet. In der Kombination erlauben diese Frameworks die Erstellung einer Karte, mit beliebigem Kartenmaterial im Hintergrund. Für die Projektarbeit wurde ein eigenes Kartendesign über Mapbox\cite{Mapbox} erstellt. Um neben der Karte eine Schicht mit den Daten aus dem Verkehrsmodell darzustellen, musste eine Extension für Leaflet verwendet werden. TileLayer GeoJSON \cite{LeafletGeoJSON} ermöglicht es eine Schicht aufzubauen, welche die Daten für die Darstellung von einer URL nach dem OpenStreetMap Schema (x, y , zoom) anfordert und dabei GeoJSON als Format erwartet. Diese Library wurde verwendet und auf die Anforderungen für den Verkehrsmodell-Fallstudien-Editor angepasst. Mit Hilfe dieser Libray konnte das Konzept des Tiling der Daten (sh. \ref{ch:datentiles} \nameref{ch:datentiles}) auf die Oberfläche eingeführt werden.
-\newpage
 \noindent
 Für die Interaktionen mit den einzelnen Editoren (z.B. für die Strassenattribute) wird AngularJS\cite{AngularJS} Version 1 verwendet. AngularJS erlaubt es, Models auf Clientseite einzubinden, welche über Bindings aktualisiert werden. Dies vereinfacht die Interaktionen mit Datenfeldern. Wenn eine Strasse angeklickt wird, wird über AngularJS die Strasse in das Edit-Menü geladen und das Menü geöffnet (sh. Abbildung \ref{fig:editstreetattributes}).
 \begin{figure}[H]

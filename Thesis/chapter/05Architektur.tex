@@ -98,11 +98,12 @@ Ein weiteres, naheliegendes Konzept für die Bearbeitung der Strassenführung, w
 \section{Architektur}
 \begin{figure}[H]
 \centering
-\includegraphics[height=10cm]{images/Architektur.png}
+\includegraphics[height=12cm]{images/Architektur.png}
 \caption{Tier des Verkehrsmodell-Fallstudien-Editor}
 \label{tier_architecture}
 \end{figure}
-Durch die Anforderungen bezüglich Performance und Antwortgeschwindigkeiten musste die Architektur für die Softwarelösung des Verkehrsmodell-Fallstudien-Editor skalierbar aufgebaut werden. Eine Entkopplung der Komponenten erlaubt eine Verteilung und kann daher die Last auf dem einzelnen Server senken. Die Softwarelösung für den Verkehrsmodell-Fallstudien-Editor ist daher als 3-Tier Applikation aufgebaut. Der Frontside-Tier ist ein Webprojekt implementiert mit dem Play Framework. Der Backend-Tier wird als REST Service (Maturity Level 2) mit Dropwizard entwickelt. Der Daten-Tier wird durch eine PostgreSQL Datenbank bereitgestellt. Der Backend-Tier wird durch eine Load Balancer skalierbar und kann daher mehrere Anfragen parallel ausführen.\\
+Aufgrund der Anforderungen bezüglich Performance und Antwortgeschwindigkeit an diese Arbeit, musste die Architektur für die Softwarelösung des Verkehrsmodell-Fallstudien-Editors skalierbar sein. D.h. es muss eine Entkopplung der Komponenten durchgeführt werden, die es erlaubt, die Last auf mehrere Server zu verteilen und dadurch eine höhere Last auf jedem einzelnen Server erlaubt.\\
+Die Softwarelösung des Verkehrsmodell-Fallstudien-Editors ist als 3-Tier Applikation aufgebaut. Der Frontend-Tier ist eine Web Applikation, umgesetzt mit dem Play Framework. Der Backend-Tier wird als REST Service (Maturity Level 2 \cite{RESTMaturity}) mit Dropqizard entwickelt. Auf diesen Tier wird über einen Flux Load Balancer zugegriffen, der für die Skalierung verantwortlich ist. Dies erlaubt eine parallele Ausführung mehrerer Anfragen. Der letzte Tier, der Daten-Tier, wird durch eine PostgreSQL Datenbank bereitgestellt.
 \begin{figure}[H]
 \centering
 \includegraphics[height=10cm]{images/layers.png}
@@ -110,8 +111,8 @@ Durch die Anforderungen bezüglich Performance und Antwortgeschwindigkeiten muss
 \label{fig:tierlayers}
 \end{figure}
 \noindent
-Die Aufteilung der Presentation Logic auf den Client-Tier, sowie den Backend-Tier erlaubt es die Last der Datendarstellung auf die verschiedenen Komponenten zu verteilen. Die Vorbereitung und Aufbereitung der Daten wird vom Backend-Tier vorgenommen. Die Daten werden im für den Client lesbaren Format übertragen. Das Rendering der Daten übernimmt dann der Client, was dazu führt, dass der Server bei diesen Aufgaben entlastet wird.
-\newpage
+Die Aufteilung der Presentation Logic auf den Client-Tier, sowie den Backend-Tier erlaubt es die Last der Datendarstellung auf die verschiedenen Komponenten zu verteilen. Die Vorbereitung und Aufbereitung der Daten wird vom Backend-Tier vorgenommen. Die Daten werden in einem, für den Client lesbaren, Format übertragen. Das Rendering der Daten übernimmt dann der Client.\\
+In Abbildung \ref{fig:tierlayers} ist die gesamte Tier- und Layeraufteilung ersichtlich.
 \section{SimMapEditor}
 \begin{figure}[H]
 \centering
@@ -120,8 +121,7 @@ Die Aufteilung der Presentation Logic auf den Client-Tier, sowie den Backend-Tie
 \label{fig:presentationlayer}
 \end{figure}
 \noindent
-Der SimMap-Editor ist die Frontend-Komponente der Architektur und basiert auf dem Play Framework. Der Client Tier ist eine in Javascript entwickelte Software, welche auf den Backend-Tier zugreift, um die Daten auf der Karte darzustellen. Dabei übernimmt der Client-Tier das Rendering der Daten.
-Der SimMapEditor ist die Frontend-Komponente der Achitektur. Der Client Tier wird in Javascript entwickelt und wird als Play Framework Projekt erstellt. Der Client Tier besitzt jedoch keine eigene Business Logic. Diese wird auf den Backend Tier ausgelagert und ist daher nicht im Play Framework implementiert. Der Client Tier ist dafür zuständig das UI Konzept (sh. \ref{sec:uiconcept} \nameref{sec:uiconcept}) zu implementieren und die Daten für die Karte vom Backend Tier anzufordern. Dazu muss der Client Tier das Tilesystem (sh. \ref{ch:datentiles} \nameref{ch:datentiles} ) implementieren und die Daten nach Tiles vom Backend Tier abfragen.
+Der SimMapEditor ist die Frontend-Komponente der Architektur und basiert auf dem Play Framework. Der Client-Tier ist eine in Javascript entwickelte Software. Für die Abfrage der Daten, die auf der Karte dargestellt werden, greift sie auf den Backend-Tier zu. Das Rendering der Daten übernimmt ebenfalls der SimMapEditor. Er selbst besitzt keine eigene Business Logik, denn die ist komplett auf den Backend-Tier aufgelagert und dadurch nicht im Play Framework implementiert. Der SimMapEditor ist dafür zuständig, das User Interface Konzept (sh. \ref{sec:uiconcept} \nameref{sec:uiconcept}) sowie auch das Tiling der Daten (sh. \ref{ch:datentiles} \nameref{ch:datentiles}) zu implementieren und somit die Daten für die Karte vom Backend-Tier in Bereichen anfordert.
 \section{SimMapService}
 \begin{figure}[H]
 \centering
@@ -130,18 +130,11 @@ Der SimMapEditor ist die Frontend-Komponente der Achitektur. Der Client Tier wir
 \label{fig:businesslogiclayer}
 \end{figure}
 \noindent
-Der SimMapService implementiert den Backend Tier der Softwarelösung in einer 3 Layer Architektur. Er wird als REST Service (Maturity Level 2 \cite{RESTMaturity} ) entwickelt. Um dem Maturity Level 2 zu entsprechen, werden die Anfragen und Antworten des Services mit HTTP Standard Methoden und Codes ausgestattet. Mit den Codes wird dem Client angezeigt, welchen Status die Antwort hat. Z.B. Wird bei einer erfolgreichen Abfrage, welche keine Daten zurückgibt, der Code 201 No Content zurückgesendet. Dies zeigt dem Client, dass er keine Daten erwarten soll, sondern vorgesehen ist das der Body der Antwort leer ist. Für den Aufbau der Antworten mit den korrekten Codes und Umwandlung der Objekte in JSON ist der Presentation Logic Layer des SimMapService zuständig.\\
-Der Application Logic Layer des SimMapService ist dafür zuständig die Daten zusammenzufügen und die Preprocessings, welche im Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben sind, durchzuführen. Er lädt Daten aus dem Resource Layer je nach Zoomlevel und Koordinaten, bereitet dann die Daten auf und übergibt sie dem Presentation Logic Layer.\\
-Der Resource Logic Layer bietet dem Application Logic Layer alle Methoden, welche für den Datenzugriff genutzt werden müssen. Seine Aufgabe ist die Erstellung und Durchführung der Abfragen auf die Datenbank.
+Der SimMapService stellt den Backend-Tier der Softwarelösung dar und ist in einer 3-Layer Architektur implementiert. Er wird als REST Service (Maturity Level 2 \cite{RESTMaturity}) entwickelt. Um dem Maturity Level 2 zu entsprechen, werden die Anfragen und Antworten des Services mit HTTP Standard Methoden und Codes ausgestattet. Mit den Codes wird dem Client angezeigt, welchen Status die Antwort besitzt. Z.B. wird bei einer erfolgreichen Anfrage, in der keine Daten in der Antwort enthalten sind, der HTTP Status Code \glqq{}204 - No Content\grqq{} zurückgesendet. Somit weiss der Client, dass die Anfrage erfolgreich war, jedoch keine Daten im Body enthalten sind. Für das Entgegennehmen, Verarbeiten und Aufbauen der Antworten mit den korrekten Codes ist die Presentation Logic Schicht des SimMapServices zuständig.\\
+Die Application Logic Schicht des SimMapServices ist dafür zuständig, die Aufbereitungen, welche im Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben sind, durchzuführen. Zusätzlich lädt er Daten, je nach Zoomstufe und Koordinaten, aus der Resource Logic Schicht und bereitet diese auf. Anschliessend werden diese Daten an die Presentation Logic Schicht, für das Weiterleiten an den Client, weitergegeben.\\
+Die Resource Logic Schicht bietet der Application Logic Schicht die Möglichkeit, auf die Daten in der Datenbank zuzugreifen. Die primäre Aufgabe dabei ist es, die Abfragen auf die Datenbank zu erstellen und durchzuführen.
 \section{Datenbank}
-\begin{figure}[H]
-\centering
-\includegraphics[height=2cm]{images/Database.png}
-\caption{Datenbank}
-\label{fig:database}
-\end{figure}
-\noindent
-Wegen der grossen Datenmenge welche mit der Softwarelösung des Verkehrsmodell-Fallstudien-Editor verwaltet werden soll, ist die Datenbank ein essenzieller Teil der Architektur. Das Datenmodell wurde darauf ausgelegt die Datenmenge der Stammdaten, von den Daten der Changesets (sh. \ref{sec:changeset} \nameref{sec:changeset}) zu trennen. Dadurch wird die Zugriffszeit auf die Stammdaten nicht durch die Datenmenge der User beeinflusst, sondern bleibt unabhängig.
+Aufgrund der grossen Datenmenge, welche ein Verkehrsmodell umfassen kann, ist die Datenbank ein essenzieller Teil der Architektur. Das Datenmodell wurde darauf ausgelegt die Stammdaten, von den Daten der Changesets (sh. \ref{sec:changeset} \nameref{sec:changeset}) zu trennen.\\
 \begin{figure}[H]
 \centering
 \includegraphics[height=10cm]{images/SimmapDatabase.jpg}
@@ -149,6 +142,6 @@ Wegen der grossen Datenmenge welche mit der Softwarelösung des Verkehrsmodell-F
 \label{fig:databasescheme}
 \end{figure}
 \noindent
-Im Datenbankschema (Abbildung \ref{fig:databasescheme}) ist ersichtlich, dass die zentrale Komponente der Daten das Network ist. Das Network wird aus einem XML generiert, welches über den Service importiert wird. Ein Network enthält Links und Nodes welche zusammen die Strassen des Strassennetzwerks bilden. In der Tabelle Network\textunderscore Options werden generelle Eigenschaften innerhalb des XMLs gespeichert.\\
-Die Tabellen Node\textunderscore Change, Link\textunderscore Change sowie Changeset bilden eine parallele Datenstruktur zu Node und Link. In diesen 3 Tabellen werden die Changesets abgespeichert. Dabei wird nur die Differenz zum Originaldatensatz eingetragen.\\
-Das Datenmodell enthält bewusst einige Redundanzen. Diese wurde aus Performancegründen eingeführt. Im Kapitel \ref{ch:redundance} \nameref{ch:redundance} werden die Gründe dazu, genauer erläutert.
+Die zentrale Komponente des Datenbankschemas, wie in Abbildung \ref{fig:databasescheme} ersichtlich, ist das Netzwerk. Das Netzwerk wird aus dem XML eingelesen, das über den Service importiert wurde. Jedes Netzwerk enthält sowohl Links als auch Nodes, die zusammen die Strassen des Verkehrsmodells bilden. In der Tabelle Network\textunderscore Options werden generelle Eigenschaften des Netzwerks, aus dem XML, gespeichert.\\
+Die Tabellen Node\textunderscore Change und Link\textunderscore Change stellen ein Abbild der Tabellen Node und Link dar. In diese beiden Tabellen sowie auch der Tabelle Changeset werden die Daten eines Changesets abgespeichert. Dabei ist wichtig, dass lediglich die Differenz zu den originalen Datensätzen aus den Tabellen Link und Node abgespeichert werden. Die restlichen Spalten werden auf null gesetzt.\\
+Das Datenmodell enthält bewusst einige Redundanzen. Die Koordinaten der Nodes werden aus Performancegründen sowohl direkt auf dem Node als auch in den dazugehörigen Links abgespeichert. Im Kapitel \ref{ch:redundance} \nameref{ch:redundance} werden die Gründe dazu, genauer erläutert.

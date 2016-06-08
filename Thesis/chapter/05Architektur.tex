@@ -1,32 +1,37 @@
 \chapter{Konzepte \& Architektur}
 \label{ch:konzepte_architektur}
 \section{Konzepte}
-Für die Bewältigung der Anforderungen an die Softwarelösung wurden einige Konzepte entwickelt, welche Einfluss auf die einzelnen Komponenten und die Architektur genommen haben. Die Softwarelösung soll wie unter \ref{ch:anforderungen_section} \nameref{ch:anforderungen_section} beschrieben, die Möglichkeit bieten eine Karte darzustellen, auf welcher die Simulationsdaten dargestellt werden und bearbeitet werden können. Die Bearbeitung sollte jedoch keinen Einfluss auf die Stammdaten haben. Diese Konzepte werden in den folgenden Kapiteln beschrieben.\\
-\textbf{\textit{TODO}}
-Um die Anforderungen (siehe. \ref{ch:anforderungen_section}) an die Softwarelösung zu bewältigen, wurden Konzepte für die einzelnen Komponenten entwickelt, welche Einfluss auf die Architektur haben.
-\subsection{Datentiles}
+Für die Bewältigung der Anforderungen an die Softwarelösung wurden Konzepte entwickelt, welche Einfluss auf die einzelnen Komponenten und die Architektur haben. Die Softwarelösung soll wie unter \ref{ch:anforderungen_section} \nameref{ch:anforderungen_section} beschrieben,  die Möglichkeit bieten, Simulationsdaten auf einer Karte darzustellen, sowie auch deren Bearbeitung ermöglichen. Wichtig ist dabei, dass die Bearbeitung keinen Einfluss auf die Stammdaten hat. Die dafür benötigten Konzepte, werden in diesem Kapitel beschrieben.
+\subsection{Daten QuadTiles}
 \label{ch:datentiles}
-Um die grosse Datenmenge (ca. 2,8 Millionen Datensätze für die Schweiz) zu bewältigen, wurde ein bewährtes Verfahren für Kartendarstellung verwendet. Dabei werden die Daten nicht als gesamtes geliefert, sondern über Tiles angefragt. Ein Tile ist ein Quadrat, welches ein vordefinierten Bereich der Welt deckt. Durch die Anforderung eines dieser Quadrate kann sichergestellt werden, dass nicht zu viele Daten auf einmal angefragt werden. Ein weiteres Konzept in Verbindung mit diesem wird unter \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben. Dabei werden die Daten für jede Zoomstufe bewertet und nur ausgegeben, wenn diese Relevant sind. Durch dieses Konzept kann die Datenmenge, die von der Website verarbeitet werden muss, stark reduziert werden.
+Der Umgang mit der grossen Datenmenge (ca. 4 Millionen Datensätze für die Schweiz) ist eine grosse Herausforderung dieser Arbeit. Um diese grosse Datenmenge zu bewältigen, wurde ein bewährtes Verfahren für die Kartendarstellung verwendet. Dies ist der QuadTile Algorithmus von OpenStreetMap \citep{OSMQuadTiles}. Dabei werden die Daten nicht als Gesamtes geliefert, sondern über Teilbereiche, sogenannte Tiles, angefragt. Ein Tile ist ein Quadrat, welches ein vordefinierten Bereich der Welt abdeckt. Dies ermöglicht es einzelne Bereiche (Tiles), die zur Zeit angezeigt werden, zu laden und nicht immer den kompletten Datenstamm. Ein weiteres Konzept, in Verbindung mit dem QuadTile Algorithmus, wird unter \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben. Dabei werden die Daten für jede Zoomstufe bewertet und lediglich bei Relevanz mitgeliefert. Durch diese beiden Konzepte kann die Datenmenge, die von der Website verarbeitet werden muss, stark reduziert werden.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/BingMapsTileSystem.jpg}
 \\Quelle: \href{https://msdn.microsoft.com/en-us/library/bb259689.aspx}{https://msdn.microsoft.com/en-us/library/bb259689.aspx}
-\caption{Fixe Aufteilung der Welt in Tiles und Berechnung des QuadKey}
+\caption{Fixe Aufteilung der Welt in Bereiche (Tiles)}
 \label{fig:tilesystem}
 \end{figure}
 \noindent
-Um von einem Eintrag auf das Tile zu schliessen, in welchem dieser sichtbar ist, wird ein Schlüssel (QuadKey) berechnet. Der QuadKey benennt eindeutig das kleinstmögliche Tile in welchem der ganze Eintrag (z.B. eine Strasse) angezeigt werden kann. Der QuadKey wird nach dem System in Abbildung \ref{fig:tilesystem} erstellt. Dabei wird auf der äussersten Zoomstufe die Welt in 4 Tiles aufgeteilt. Diese werden nummeriert. z.B. 0 für links oben, 1 für rechts oben. Um die nächste Stufe der Tiles zu erstellen, wird jedes Tile wieder in 4 Tiles aufgeteilt und dann ebenfalls nummeriert. Dabei wird als Prefix die Nummer des alten Tiles verwendet. Dadurch kann jedes Tile auf jeder Zoomstufe eindeutig adressiert werden. Der QuadKey bietet auch die Möglichkeit, mit Hilfe des Prefix alle Tiles unterhalb eines Tiles zu berechnen. So starten alle QuadKeys, welche auf einer beliebigen Zoomstufe in einem Tile unterhalb des linken oberen Tile auf Level 1 sind, mit einer 0. Dieser Ansatz kann für die Filterung der Daten verwendet werden.
+Um von einem Datensatz (Link oder Node) auf das Tile zu schliessen, in welchem dieser sichtbar ist, wird ein Schlüssel (QuadKey) berechnet. Der QuadKey benennt eindeutig das kleinstmögliche Tile in welchem der komplette Datensatz ersichtlich ist. Der QuadKey setzt sich, wie in Abbildung \ref{fig:tilesystem} ersichtlich, aus der Nummerierung der Teilbereiche zusammen. Dabei wird die Welt in der äussersten Zoomstufe in 4 Bereiche aufgeteilt, die von 0 bis 3 durch nummeriert werden. Für die nächste Stufe, wird jeder Bereich aus Level 1 je wieder in 4 Bereiche aufgeteilt. Diese neuen Teilbereiche werden dann wieder nummeriert. Dabei wird die Nummerierung des vorhergehenden Bereichs als Prefix verwendet und wieder von 0 bis 3 durch nummeriert. Dadurch kann jeder Bereich auf jeder Zommstufe eindeutig adressiert werden. Dieser Algorithmus bietet ebenfalls die Möglichkeit, mit Hilfe des QuadKeys alle darunterliegenden Bereiche zu finden, weil dieser QuadKey ein Prefix aller QuadKeys ist, die unter diesem Bereich liegen. Dieser Ansatz wird für die Filterung der Daten verwendet.
 \subsection{Preprocessing und Bewertung der Daten}\label{sec:concept_preprocessing}
-Um die Zugriffszeiten der Datenbank zu erhöhen, werden die Daten beim Importieren vorberechnet. Durch diesen Vorgang werden bewusst Redundanzen in das Datenmodell eingeführt. Diese Redundanzen erlauben den Zugriff auf Daten ohne teure JOIN Statements oder SQL-Funktionen aufzurufen. Auf die Vorberechnungen, welche im Datenmodell verwendet werden, wird tiefer im Abschnitt \ref{sec:tilingdataimplementation} \nameref{sec:tilingdataimplementation} eingegangen. Um weiteren Berechnungsaufwand zu reduzieren, wird jeder Datensatz neben der Vorberechnung auf seine Anzeigewichtigkeit bewertet. Dabei wird berechnet, ab welcher Stufe z.B. die Strasse dargestellt wird.
-
+Ein wichtiges Ziel der Aufbereitung der Daten, ist das verringern der Zugriffszeiten auf die Datenbank. Diese Aufbereitung findet direkt beim Import statt. Durch diesen Vorgang werden bewusst Redundanzen in das Datenmodell eingeführt. Diese Redundanzen erlauben den Zugriff auf Daten ohne teure JOIN Statements oder SQL-Funktionen aufzurufen. Auf die Berechnungen und Aufbereitungen, die beim Import des Datenmodells angewendet werden, wird genauer im Kapitel \ref{sec:tilingdataimplementation} \nameref{sec:tilingdataimplementation} eingegangen.
+\newpage
 \subsection{Changeset}\label{sec:changeset}
-Um Daten der User abzuspeichern wurde ein Konzept entwickelt, mit welchem erreicht werden soll, dass Daten gespeichert werden können ohne die Stammdaten anzupassen. Wenn für jeden User die Stammdaten kopiert werden müssten, würde das zu einer unnötigen Vergrösserung der Datenmenge führen. Dadurch wurde das Changeset Konzept entwickelt. Changesets erlauben es, Änderungen aufzuteilen und nur die Differenz zu den Stammdaten abzulegen. Dadurch wird es ermöglicht die Zugriffszeiten auf die Stammdaten konstant zu halten. Das Changeset ist als Abbild der Stammdaten aufgebaut. Dabei werden jedoch nur Felder gespeichert, welche sich zu den Stammdaten unterscheiden. Da ein Changeset nicht direkt Stammdaten enthält werden Änderungen an den Stammdaten übernommen, so fern sie nicht durch das Changeset bearbeitet wurden.
-\subsection{UI-Konzept}\label{sec:uiconcept}
-Das UI ist eine zentrale Komponente des Verkehrsmodell-Fallstudien-Editor. Daher muss ein einfaches und intuitives Konzept entwickelt werden, welches wenig Einarbeitungszeit braucht. Als Inspirationsquelle für das User Handling wurde Google Maps \cite{GoogleMaps}, sowie der ID Editor \citep{IDEditor} von OpenStreetMap verwendet, da sie zwei weit verbreitete und oft genutzte Anwendungen sind, welche ein durchdachtes Design besitzen.\\[0.8cm]
-\textbf{evtl. TODO Hauptaufgaben des UI Darstellen (evtl mit Grafik)}
+Der Benutzer kann auf dem Verkehrsmodell-Fallstudien-Editor Änderungen vornehmen und anschliessend persistieren. Dafür wurde ein Konzept entwickelt, dass es erlaubt Änderungen an den Daten abzuspeichern, ohne die Stammdaten direkt anzupassen. Arbeitet der Benutzer direkt mit den Stammdaten, hat dies zur Folge, dass für jeden Benutzer die gesamten Stammdaten separat abgelegt werden muss. Dies ist eine unnötige Redundanz der Daten und kostet unnötig viel Speicherplatz.\\
+Um dem entgegen zu wirken, wird das Konzept Changeset verwendet. Dabei werden die Stammdaten nur einmalig abgelegt und von jedem Benutzer verwendet. Die Struktur eines Changesets stellt ein Abbild der Struktur der Stammdaten dar. Führt ein Benutzer eine Änderung an den Daten durch, wird lediglich die Differenz zu den Stammdaten in diesem Changeset abgelegt. Somit ist es möglich, wie in Abbilung \ref{fig:changeset_example} ersichtlich, das Changeset eines Benutzers als Differenz über die Stammdaten zu legen und somit den aktuellen Datensatz zu erhalten. Sollten Änderungen an den Stammdaten gemacht werden, sind diese direkt bei allen Benutzern ersichtlich, insofern die Änderungen nicht durch das Changeset überdeckt werden.
+\begin{figure}[H]
+\centering
+\includegraphics[height=6cm]{images/Changeset.png}
+\caption{Changeset Beispiel}
+\label{fig:changeset_example}
+\end{figure}
+\noindent
+\subsection{User Interface - Konzept}\label{sec:uiconcept}
+Das User Interface ist eine zentrale Komponente des Verkehrsmodell-Fallstudien-Editors. Eine Voraussetzung für ein optimales User Interface, ist ein einfaches und intuitives Konzept, das ohne grosse Einarbeitungszeit zu bedienen ist. Für dieses Konzept diente Google Maps \cite{GoogleMaps} sowie auch der ID Editor \citep{IDEditor} von OpenStreetMap als Inspirationsquelle für das User Handling. Google Maps ist die am weitesten verbreitete Web Anwendung, wenn es um die Benutzung einer Karte im Browser geht. Für die Bearbeitung der Daten dient der oft genutzte ID Editor als Vorlage. Beide Web Applikationen besitzen ein durchdachtes Design, an dessen Bedienung sich die Benutzer gewöhnt sind.
 \newpage
 \subsubsection{Google Maps}
-Google Maps ist eines der weit verbreitetsten Kartensysteme. Dadurch sind sich die User an das Handling von Google Maps gewöhnt und Systeme mit ähnlichen Aufbau sind intuitiv. Die Vorteile des System von Google Map ist die intuitive Bedienung, gekoppelt an ein einfaches, aufgeräumtes und leichten Design.
+Google Maps ist eines der am weitesten verbreiteten Kartensystemen. Der Benutzer ist sich an das Handling von Google Maps gewöhnt und kann mit Systemen, die ähnlich aufgebaut sind, ohne Probleme arbeiten. Der grösste Vorteil von Google Maps ist die intuitive Bedienung, gekoppelt an ein einfaches, aufgeräumtes und leichtes Design.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/AnalyseGoogle.png}
@@ -34,17 +39,18 @@ Google Maps ist eines der weit verbreitetsten Kartensysteme. Dadurch sind sich d
 \label{fig:googlemaps}
 \end{figure}
 \noindent
-Die Abbildung \ref{fig:googlemaps} \nameref{fig:googlemaps} zeigt die Analyse von Google Maps. Die Karte bei Google Maps erhält sehr viel Platz und alle Controls werden um den Hauptbereich der Karte herum angeordnet. Dadurch wird der User nicht von der Kernaufgabe der Seite abgelenkt. Bei kleineren Karten fühlt sich der User schneller eingegrenzt muss mehr aufwand in Scrolling investieren, was stören kann. Das User Interface passt sich laufend an die Nutzung des Users an. Wenn der User also fertig ist, ein Ort zu finden und eine Route berechnen will, wird das Menü für die Route seitlich eingeblendet. Dadurch wird der Karte Platz weggenommen, welcher jedoch nicht mehr benötigt wird, da der User eine Route berechnen will. Um Platz für die Controls zu sparen, werden viele Symbole anstatt Text eingesetzt.
+Die Abbildung \ref{fig:googlemaps} \nameref{fig:googlemaps} zeigt die Auswertung der Analyse von Google Maps. Die Karte selbst, erhält sehr viel Platz und alle Bedienelemente (Controls) werden am Randbereich der Karte angeordnet. Dadurch ist sichergestellt, dass sich der Benutzer auf eine Kernaufgabe konzentriert und sich nicht ablenken lässt. Bei schlechteren Beispielen, auf denen die Karte nur wenig Platz erhält, fühlt sich der Benutzer sehr schnell eingegrenzt und muss deutlich mehr Aufwand ins Zoomen und seitlich Bewegen investieren. Dies kann einen Benutzer stören und ihn vom schnellen Erledigen der Aufgabe abhalten. Das User Interface passt sich laufend an die Nutzung des Benutzers an. Hat der Benutzer also einen Ort gefunden und möchten eine Route berechnen, wird ihm neu ein Menü eingeblendet, das ihm dies ermöglicht. Dadurch wird zwar der Karte Platz genommen, jedoch liegt nun das Hauptaugenmerk auf dem Planen der Route. Zusätzlich zum Einsparen von Platz werden bei den Bedienelementen meist kein Text sondern Symbole eingesetzt.
 \subsubsection*{Ergebnisse Analyse}
-Die Analyse von Google Maps ergab folgende Punkte, welche in das Design des Verkehrsmodell-Fallstudien-Editors einfliessen sollen:
+Folgende Punkte, fliessen in das Design des Verkehrsmodell-Fallstudien-Editors mit ein:
 \begin{itemize}
+\itemsep0em
 \item Der Karte viel Platz einräumen.
 \item Menüs, welche nicht dem aktuellen Use Case entsprechen, ausblenden.
 \item Viele Symbole, wenig Text.
 \end{itemize}
 \newpage
 \subsubsection{ID Editor}
-Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. Er bietet die Möglichkeit Daten von OpenStreetMap direkt auf einer Karte zu bearbeiten. Die Änderungen werden dann als Changeset an OpenStreetMap übertragen und freigeschaltet. Da die Funktionen des ID Editor sehr ähnlich wie die Funktionen des Verkehrsmodell-Fallstudien Editor sind, wurde das UI des ID Editor ebenfalls analysiert.
+Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. Er bietet die Möglichkeit Daten von OpenStreetMap direkt auf einer Karte zu bearbeiten. Die Änderungen werden dann als Changeset an OpenStreetMap übertragen und freigeschaltet. Die Funktionalität des Verkehrsmodell-Fallstudien-Editors ähnelt sehr stark den Funktionen des ID Editors. Aufgrund dessen wurde das User Interface des ID Editors ebenfalls analysiert.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/AnalyseIDEditor.png}
@@ -52,17 +58,18 @@ Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. E
 \label{fig:ideditor}
 \end{figure}
 \noindent
-In der Abbildung \ref{fig:ideditor} \nameref{fig:ideditor} wird die Analyse des ID Editor gezeigt. Um die Datenmenge, welche OpenStreetMap für die Kartenerstellung braucht, verwalten zu können, ist ein wichtiges Element des User Interface, dass die Daten erst dargestellt werden, wenn der User nahe genug herangezoomed hat. Dies ermöglicht es dem ID Editor die Datenmenge, welche zur selben Zeit dargestellt werden soll, auf ein Minimum zu reduzieren. Das Editormenü des ID Editor ist so aufgebaut, dass eine Strasse angeklickt wird und die Strasse dann in einem Sidepanel dargestellt wird. Dabei wird die Karte nicht ausgeblendet, was eine leichte und schnelle Bedienung für den User ermöglicht. Weiter besitzt der ID Editor eine gute Undo- / Redofunktion. Änderungen welche an Objekten vorgenommen werden, können einfach wieder rückgängig gemacht werden.
+Die Abbildung \ref{fig:ideditor} \nameref{fig:ideditor} zeigt die Auswertung der Analyse des ID Editor. Eine Kerneigenschaft des User Interfaces ist es, dass die Daten erst ab einer gewissen Zoomstufe angezeigt werden. Dies hauptsächlich, weil der ID Editor eine deutlich grössere Datenmenge verarbeiten muss. Diese Eigenschaft ermöglicht es dem ID Editor, die Datenmenge, die zur selben Zeit dargestellt werden muss, auf ein Minimum zu reduzieren. Das Bearbeitungsmenü (Editor Menü) ist so aufgebaut, dass es nach dem Auswählen eines Elements die dazugehörigen Daten des Elements zur Bearbeitung anzeigt. Die Tatsache, dass die Karte dabei immer ersichtlich bleibt, ermöglicht eine leichte und schnelle Bedienung für den Benutzer. Eine weitere wichtige Funktion des ID Editors ist die Undo- / Redo-Funktion. Änderungen an Elementen können einfach wieder rückgängig gemacht werden oder dann wiederhergestellt werden.
 \subsubsection*{Ergebnisse Analyse}
-Für das Design-Konzept des Verkehrsmodell-Fallstudien-Editors ergeben sich folgende Punkte aus der Analyse:
+Folgende Punkte, fliessen in das Design des Verkehrsmodell-Fallstudien-Editors mit ein:
 \begin{itemize}
-\item Kein Wechsel der Website zur Bearbeitung von Strassenattributen.
-\item Strassen durch anklicken bearbeiten.
-\item Undo- /Redofunktion.
+\itemsep0em
+\item Karte bleibt stehen, während Bearbeitung von Strassenattributen.
+\item Bearbeitung der Strassen, durch Auswahl.
+\item Undo- / Redo-Funktion.
 \end{itemize}
 \newpage
 \subsubsection{Detail Konzept}
-Aus den Erkenntnissen der Analyse von Google Maps und dem ID Editor wurde ein Konzept für das UI des Verkehrsmodell-Fallstudien Editor entwickelt.
+Aus den Erkenntnissen der Analyse von Google Maps und dem ID Editor wurde folgendes Konzept für das User Interface des Verkehrsmodell-Fallstudien-Editors entwickelt.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/KonzeptUI.png}
@@ -70,7 +77,7 @@ Aus den Erkenntnissen der Analyse von Google Maps und dem ID Editor wurde ein Ko
 \label{fig:conceptui}
 \end{figure}
 \noindent
-Das Userinterface wird, angelehnt an Google Maps, eine Karte besitzen, welche den Browser ausfüllt. Menüs, welche nicht gebraucht werden, sind, wie in Abbildung \ref{fig:conceptui} \nameref{fig:conceptui} dargestellt, ausgeblendet. Dadurch hat der User viel Platz, die für ihn relevante Strasse zu suchen. Durch das Auswählen einer Strasse, wird ein Menü von der Seite eingeblendet, welches das Bearbeiten der Parameter dieser Strasse erlaubt. (sh. Abbildung \ref{fig:concepteditStreet} \nameref{fig:concepteditStreet}). Zudem bietet die Software eine Undo- / Redofunktion.
+Angelehnt an Google Maps, wir das User Interface eine Karte besitzen, die den gesamten Platz im Browser ausfüllt. Die Bedienelemente, in der linken oberen Ecke, werden als selbsterklärende Symbole dargestellt und sind während der gesamten Benutzung der Applikation ersichtlich. Menüs, die zur Zeit nicht gebraucht werden, sind, wie in Abbildung \ref{fig:conceptui} dargestellt, ausgeblendet. Dies bietet dem Benutzer viel Platz, für das Suchen und Auswählen einer für ihn relevanten Strasse. Durch das Auswählen einer Strasse, wird ein Menü von der rechten Seite her eingeblendet, das das Bearbeiten der Parameter dieser Strasse ermöglicht (sh. Abbildung \ref{fig:concepteditStreet}).
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/KonzeptEditStreet.png}
@@ -79,7 +86,7 @@ Das Userinterface wird, angelehnt an Google Maps, eine Karte besitzen, welche de
 \end{figure}
 \newpage
 \noindent
-Um die Wegführung einer Strasse zu bearbeiten kann der User in einen Bearbeitungsmodus wechseln. In dem er dann eine Strasse anklicken kann und die Führung der Strasse in einem Menü verändern. Die dafür benötigten Nodes, werden aus Performancegründen nur im Bearbeitungsmodus geladen und angezeigt.
+Um die Wegführung einer Strasse zu bearbeiten kann der Benutzer in einen Bearbeitungsmodus wechseln. In diesem Modus werden zusätzlich zu den Links auch die Nodes angezeigt, die ansonsten aus Performancegründen nicht geladen werden. Der Benutzer kann eine Strasse auswählen und dessen Führung mit Hilfe eines Menüs ändern.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/KonzeptChangeStreet.PNG}

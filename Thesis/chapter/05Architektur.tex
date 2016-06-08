@@ -19,9 +19,9 @@ Um von einem Eintrag auf das Tile zu schliessen, in welchem dieser sichtbar ist,
 \subsection{Preprocessing und Bewertung der Daten}\label{sec:concept_preprocessing}
 Um die Zugriffszeiten der Datenbank zu erhöhen, werden die Daten beim Importieren vorberechnet. Durch diesen Vorgang werden bewusst Redundanzen in das Datenmodell eingeführt. Diese Redundanzen erlauben den Zugriff auf Daten ohne teure JOIN Statements oder SQL-Funktionen aufzurufen. Auf die Vorberechnungen, welche im Datenmodell verwendet werden, wird tiefer im Abschnitt \ref{sec:tilingdataimplementation} \nameref{sec:tilingdataimplementation} eingegangen. Um weiteren Berechnungsaufwand zu reduzieren, wird jeder Datensatz neben der Vorberechnung auf seine Anzeigewichtigkeit bewertet. Dabei wird berechnet, ab welcher Stufe z.B. die Strasse dargestellt wird.
 
-\subsection{Changeset}
+\subsection{Changeset}\label{sec:changeset}
 Um Daten der User abzuspeichern wurde ein Konzept entwickelt, mit welchem erreicht werden soll, dass Daten gespeichert werden können ohne die Stammdaten anzupassen. Wenn für jeden User die Stammdaten kopiert werden müssten, würde das zu einer unnötigen Vergrösserung der Datenmenge führen. Dadurch wurde das Changeset Konzept entwickelt. Changesets erlauben es, Änderungen aufzuteilen und nur die Differenz zu den Stammdaten abzulegen. Dadurch wird es ermöglicht die Zugriffszeiten auf die Stammdaten konstant zu halten. Das Changeset ist als Abbild der Stammdaten aufgebaut. Dabei werden jedoch nur Felder gespeichert, welche sich zu den Stammdaten unterscheiden. Da ein Changeset nicht direkt Stammdaten enthält werden Änderungen an den Stammdaten übernommen, so fern sie nicht durch das Changeset bearbeitet wurden.
-\subsection{UI-Konzept}
+\subsection{UI-Konzept}\label{sec:uiconcept}
 Das UI ist eine zentrale Komponente des Verkehrsmodell-Fallstudien-Editor. Daher muss ein einfaches und intuitives Konzept entwickelt werden, welches wenig Einarbeitungszeit braucht. Als Inspirationsquelle für das User Handling wurde Google Maps \cite{GoogleMaps}, sowie der ID Editor \citep{IDEditor} von OpenStreetMap verwendet, da sie zwei weit verbreitete und oft genutzte Anwendungen sind, welche ein durchdachtes Design besitzen.\\[0.8cm]
 \textbf{evtl. TODO Hauptaufgaben des UI Darstellen (evtl mit Grafik)}
 \newpage
@@ -105,16 +105,43 @@ Durch die Anforderungen bezüglich Performance und Antwortgeschwindigkeiten muss
 \noindent
 Die Aufteilung der Presentation Logic auf den Client-Tier, sowie den Backend-Tier erlaubt es die Last der Datendarstellung auf die verschiedenen Komponenten zu verteilen. Die Vorbereitung und Aufbereitung der Daten wird vom Backend-Tier vorgenommen. Die Daten werden im für den Client lesbaren Format übertragen. Das Rendering der Daten übernimmt dann der Client, was dazu führt, dass der Server bei diesen Aufgaben entlastet wird.
 \newpage
-\section{SimMap-Editor}
+\section{SimMapEditor}
 \begin{figure}[H]
 \centering
 \includegraphics[height=2cm]{images/presentationlayer.png}
-\caption{SimMap-Editor}
+\caption{SimMapEditor}
 \label{fig:presentationlayer}
 \end{figure}
 \noindent
 Der SimMap-Editor ist die Frontend-Komponente der Architektur und basiert auf dem Play Framework. Der Client Tier ist eine in Javascript entwickelte Software, welche auf den Backend-Tier zugreift, um die Daten auf der Karte darzustellen. Dabei übernimmt der Client-Tier das Rendering der Daten.
-\section{SimMap-Service}
-TODO
+Der SimMapEditor ist die Frontend-Komponente der Achitektur. Der Client Tier wird in Javascript entwickelt und wird als Play Framework Projekt erstellt. Der Client Tier besitzt jedoch keine eigene Business Logic. Diese wird auf den Backend Tier ausgelagert und ist daher nicht im Play Framework implementiert. Der Client Tier ist dafür zuständig das UI Konzept (sh. \ref{sec:uiconcept} \nameref{sec:uiconcept}) zu implementieren und die Daten für die Karte vom Backend Tier anzufordern. Dazu muss der Client Tier das Tilesystem (sh. \ref{ch:datentiles} \nameref{ch:datentiles} ) implementieren und die Daten nach Tiles vom Backend Tier abfragen.
+\section{SimMapService}
+\begin{figure}[H]
+\centering
+\includegraphics[height=5.5cm]{images/BusinessLogicLayer.png}
+\caption{SimMapService}
+\label{fig:businesslogiclayer}
+\end{figure}
+\noindent
+Der SimMapService implementiert den Backend Tier der Softwarelösung in einer 3 Layer Architektur. Er wird als REST Service (Maturity Level 2 \cite{RESTMaturity} ) entwickelt. Um dem Maturity Level 2 zu entsprechen, werden die Anfragen und Antworten des Services mit HTTP Standard Methoden und Codes ausgestattet. Mit den Codes wird dem Client angezeigt, welchen Status die Antwort hat. Z.B. Wird bei einer erfolgreichen Abfrage, welche keine Daten zurückgibt, der Code 201 No Content zurückgesendet. Dies zeigt dem Client, dass er keine Daten erwarten soll, sondern vorgesehen ist das der Body der Antwort leer ist. Für den Aufbau der Antworten mit den korrekten Codes und Umwandlung der Objekte in JSON ist der Presentation Logic Layer des SimMapService zuständig.\\
+Der Application Logic Layer des SimMapService ist dafür zuständig die Daten zusammenzufügen und die Preprocessings, welche im Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben sind, durchzuführen. Er lädt Daten aus dem Resource Layer je nach Zoomlevel und Koordinaten, bereitet dann die Daten auf und übergibt sie dem Presentation Logic Layer.\\
+Der Resource Logic Layer bietet dem Application Logic Layer alle Methoden, welche für den Datenzugriff genutzt werden müssen. Seine Aufgabe ist die Erstellung und Durchführung der Abfragen auf die Datenbank.
 \section{Datenbank}
-TODO
+\begin{figure}[H]
+\centering
+\includegraphics[height=2cm]{images/Database.png}
+\caption{Datenbank}
+\label{fig:database}
+\end{figure}
+\noindent
+Wegen der grossen Datenmenge welche mit der Softwarelösung des Verkehrsmodell-Fallstudien-Editor verwaltet werden soll, ist die Datenbank ein essenzieller Teil der Architektur. Das Datenmodell wurde darauf ausgelegt die Datenmenge der Stammdaten, von den Daten der Changesets (sh. \ref{sec:changeset} \nameref{sec:changeset}) zu trennen. Dadurch wird die Zugriffszeit auf die Stammdaten nicht durch die Datenmenge der User beeinflusst, sondern bleibt unabhängig.
+\begin{figure}[H]
+\centering
+\includegraphics[height=10cm]{images/SimmapDatabase.jpg}
+\caption{ERP der Datenbank}
+\label{fig:databasescheme}
+\end{figure}
+\noindent
+Im Datenbankschema (Abbildung \ref{fig:databasescheme}) ist ersichtlich, dass die zentrale Komponente der Daten das Network ist. Das Network wird aus einem XML generiert, welches über den Service importiert wird. Ein Network enthält Links und Nodes welche zusammen die Strassen des Strassennetzwerks bilden. In der Tabelle Network\textunderscore Options werden generelle Eigenschaften innerhalb des XMLs gespeichert.\\
+Die Tabellen Node\textunderscore Change, Link\textunderscore Change sowie Changeset bilden eine parallele Datenstruktur zu Node und Link. In diesen 3 Tabellen werden die Changesets abgespeichert. Dabei wird nur die Differenz zum Originaldatensatz eingetragen.\\
+Das Datenmodell enthält bewusst einige Redundanzen. Diese wurde aus Performancegründen eingeführt. Im Kapitel \ref{ch:redundance} \nameref{ch:redundance} werden die Gründe dazu, genauer erläutert.

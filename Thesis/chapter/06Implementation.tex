@@ -37,15 +37,15 @@ Level 16 & => & Der Rest \\
 Wie in Kapitel \ref{sec:uiconcept} \nameref{sec:uiconcept} beschrieben, muss das User Interface des Verkehrsmodell-Fallstudien-Editor einigen Anforderungen entsprechen. Dieses User Interface wird als Javascript Single Page Anwendung konzipiert und implementiert. Dies hat zum Vorteil, dass der Benutzer die Seite nie wechselt, sondern alle benötigten Elemente laufend nachgeladen werden. Dadurch erhält der Benutzer eine flüssigere User Experience. Die Web Applikation wird in eine Main View (Haupt-Anzeige) und mehrere Partial Views (Teil-Anzeigen) aufgeteilt. Die Partial Views werden im Play Framework als Route erfasst und mittels Javascript angefordert. Anschliessend werden diese Partial Views in einen Container geladen. Die Abbildung \ref{fig:mainviewpartialview} zeigt den Aufbau des User Interface mit einer eingezeichneten Partial View.
 \begin{figure}[H]
 \centering
-\includegraphics[height=6cm]{images/MainviewPartialview.PNG}
+\includegraphics[height=6cm]{images/MainviewPartialview.png}
 \caption{UI mit eingezeichneter Partial View}
 \label{fig:mainviewpartialview}
 \end{figure}
 \noindent
-Wie in Abbildung \ref{fig:mainviewpartialview} ersichtlich wurde der Karte viel Platz eingeräumt. Für die Darstellung der Karte wurde das Framework Leaflet \cite{Leaflet}, sowie d3.js \cite{D3JS} verwendet. In der Kombination erlauben diese Frameworks die Erstellung einer Karte, mit beliebigem Kartenmaterial im Hintergrund. Für die Projektarbeit wurde ein eigenes Kartendesign über Mapbox \cite{Mapbox} erstellt. Um zusätzlich zu der Karte eine Schicht mit den Daten aus dem Verkehrsmodell darzustellen, musste eine Erweiterung für Leaflet, TileLayer GeoJSON \cite{LeafletGeoJSON},  verwendet werden. Diese Erweiterung ermöglicht es eine Schicht aufzubauen, welche die Daten für die Darstellung von einer URL nach dem OpenStreetMap Schema (x, y , zoom) anfordert und dabei GeoJSON als Antwortformat erwartet. Diese Library wurde gemäss den Anforderungen des Verkehrsmodell-Fallstudien-Editors erweitert. Mit Hilfe dieser Libray konnte das Konzept des Tiling der Daten (sh. \ref{ch:datentiles} \nameref{ch:datentiles}) umgesetzt werden. Für die Interaktionen mit den einzelnen Editoren wird AngularJS \cite{AngularJS} Version 1.5 verwendet. AngularJS ermöglicht das Binding eines Models an Datenfelder und dadurch auch das Bearbeiten dieser Models. Z.B. wird beim Anklicken einer Strasse, das Model der Strasse an das Edit-Menü gebunden und ermöglicht dadurch die Bearbeitung (sh. Abbildung \ref{fig:editstreetattributes}).
+Wie in Abbildung \ref{fig:mainviewpartialview} ersichtlich wurde der Karte viel Platz eingeräumt. Für die Darstellung der Karte wurde das Framework Leaflet \cite{Leaflet}, sowie d3.js \cite{D3JS} verwendet. In der Kombination erlauben diese Frameworks die Erstellung einer Karte, mit beliebigem Kartenmaterial im Hintergrund. Für die Projektarbeit wurde ein eigenes Kartendesign über Mapbox\cite{Mapbox} erstellt. Um zusätzlich zu der Karte eine Schicht mit den Daten aus dem Verkehrsmodell darzustellen, musste eine Erweiterung für Leaflet, TileLayer GeoJSON \cite{LeafletGeoJSON},  verwendet werden. Diese Erweiterung ermöglicht es eine Schicht aufzubauen, welche die Daten für die Darstellung von einer URL nach dem OpenStreetMap Schema (x, y , zoom) anfordert und dabei GeoJSON als Antwortformat erwartet. Diese Library wurde gemäss den Anforderungen des Verkehrsmodell-Fallstudien-Editors erweitert. Mit Hilfe dieser Libray konnte das Konzept des Tiling der Daten (sh. \ref{ch:datentiles} \nameref{ch:datentiles}) umgesetzt werden. Für die Interaktionen mit den einzelnen Editoren wird AngularJS \cite{AngularJS} Version 1.5 verwendet. AngularJS ermöglicht das Binding eines Models an Datenfelder und dadurch auch das Bearbeiten dieser Models. Z.B. wird beim Anklicken einer Strasse, das Model der Strasse an das Edit-Menü gebunden und ermöglicht dadurch die Bearbeitung (sh. Abbildung \ref{fig:editstreetattributes}).
 \begin{figure}[H]
 \centering
-\includegraphics[height=6cm]{images/EditStreetattributes.PNG}
+\includegraphics[height=6cm]{images/EditStreetattributes.png}
 \caption{UI mit geöffnetem Editor für Strassenattribute}
 \label{fig:editstreetattributes}
 \end{figure}
@@ -53,7 +53,7 @@ Wie in Abbildung \ref{fig:mainviewpartialview} ersichtlich wurde der Karte viel 
 Um die Wegführung einer Strasse zu bearbeiten, kann eine Strasse angeklickt werden. Dabei öffnet sich ein Bearbeitungsfenster, in dem der Start und Endpunkt der Strasse mittels Klick auf den entsprechenden Node bearbeitet werden (Abbildung \ref{fig:editstreetdirection}. Nach der Bearbeitung wird die Strasse neu gezeichnet und hervorgehoben.\\
 \begin{figure}[H]
 \centering
-\includegraphics[height=6cm]{images/EditStreetdirection.PNG}
+\includegraphics[height=6cm]{images/EditStreetdirection.png}
 \caption{UI mit geöffnetem Editor für Strassenführung}
 \label{fig:editstreetdirection}
 \end{figure}

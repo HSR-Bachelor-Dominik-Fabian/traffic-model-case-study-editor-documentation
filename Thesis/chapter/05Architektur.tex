@@ -22,7 +22,7 @@ Der Benutzer kann auf dem Verkehrsmodell-Fallstudien-Editor Änderungen vornehme
 Um dem entgegen zu wirken, wird das Konzept Changeset verwendet. Dabei werden die Stammdaten nur einmalig abgelegt und von jedem Benutzer verwendet. Die Struktur eines Changesets stellt ein Abbild der Struktur der Stammdaten dar. Führt ein Benutzer eine Änderung an den Daten durch, wird lediglich die Differenz zu den Stammdaten in diesem Changeset abgelegt. Somit ist es möglich, wie in Abbilung \ref{fig:changeset_example} ersichtlich, das Changeset eines Benutzers als Differenz über die Stammdaten zu legen und somit den aktuellen Datensatz zu erhalten. Sollten Änderungen an den Stammdaten gemacht werden, sind diese direkt bei allen Benutzern ersichtlich, insofern die Änderungen nicht durch das Changeset überdeckt werden.
 \begin{figure}[H]
 \centering
-\includegraphics[height=6cm]{images/Changeset.png}
+\includegraphics[height=6cm]{images/changeset.png}
 \caption{Changeset Beispiel}
 \label{fig:changeset_example}
 \end{figure}

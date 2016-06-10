@@ -60,6 +60,7 @@ Um die Wegführung einer Strasse zu bearbeiten, kann eine Strasse angeklickt wer
 \noindent
 Änderungen welche über den Attribut-  oder Strassenführungseditor erstellt werden, werden auf einem Undo-Stack abgelegt. Dadurch können Änderungen über eine Undo-Funktion wieder rückgängig gemacht werden und über ein Redo wiederhergestellt werden. Das Changeset, sowie der Undo- und Redo-Stack sind im Session Storage des Browser abgelegt. Dadurch gehen die Änderungen nicht verloren, solange die Browser Session noch offen ist. Wird der Browser geschlossen, wird die Session gelöscht und die Änderungen gehen somit verloren. Der Benutzer kann seine Änderungen speichern, sodass sie in der Datenbank persistiert werden. Der Vorteil des Session Storage liegt darin, dass ein Benutzer die Seite neu laden kann oder ein Tab schliessen kann, ohne das seine lokalen Änderungen verloren gehen.
 \section{Performance Optimierungen}
+\label{ch:performance}
 Die Performance ist ein sehr wichtiger Faktor in dieser Arbeit. Ohne starke Performance kann die grosse Datenmenge in diesem Projekt nicht effizient dargestellt werden. Aufgrund dessen, wurde einiges an Zeit in die Optimierung investiert. Zwei wichtige Faktoren haben grossen Einfluss auf die Performance dieser Web Applikation. Zum einen ist dies die Antwortzeit der einzelnen Abfragen der Daten. Diese Antwortzeit konnte durch mehrere Optimierungen, die in diesem Kapitel genauer beschrieben werden, deutlich verbessert werden. Dadurch konnten die nicht-funktionalen Anforderungen aus dem Kapitel \ref{ch:NFRs} \nameref{ch:NFRs} eingehalten werden.\\
 Ein weiterer grosser Faktor ist das Rendering der Daten im Browser. In höheren Zoomlevels werden bis zu mehreren Tausend Links und Nodes im Browser dargestellt. Der Browser benötigt für das Rendering doch eine gewisse Zeit, auf die der Entwickler keinen grossen Einfluss hat. Es kann lediglich darauf geachtet werden, dass keine redundante Informationen vom Browser gerendert werden müssen.
 \subsection{Caching}
@@ -92,12 +93,6 @@ Die Abfrage der Strassen beinhaltet eine LIKE Abfrage von SQL, die das Suchen vo
 \subsection{Datenbank Redundanz} \label{ch:redundance}
 Die Daten in der Datenbank sind in eine Tabelle \glqq{}Links\grqq{} und eine Tabelle \glqq{}Nodes\grqq{} aufgeteilt. Bei der Abfrage werden sowohl die Parameter des Links als auch die Koordinaten der dazugehörigen Nodes benötigt. Dafür wurde zu Beginn ein klassischer SQL JOIN verwendet, um die beiden Tabellen miteinander zu verknüpfen. Durch die Analyse des Ausführungsplans wurde ersichtlich, dass dieser JOIN einiges an Zeit in Anspruch nahm. Um diese Zeit einzusparen, werden nun die Koordinaten der beiden Nodes, direkt beim Import der Daten, in die Tabelle der Links mit abgespeichert. Dadurch sind die Koordinaten der Nodes zwar redundant vorhanden, jedoch beschleunigt dies die Abfrage deutlich. Daher wurde die Redundanz der Daten in Kauf genommen.
 \newpage
-\section{Testing}
-evtl. TODO
-\subsection{UI - Testing}
-evtl. TODO
-\subsection{Service - Testing}
-evtl. TODO
 \section{Infrastruktur}
 evtl. TODO
 \subsection{Docker}

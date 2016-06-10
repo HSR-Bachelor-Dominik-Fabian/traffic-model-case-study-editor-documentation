@@ -1,6 +1,51 @@
 \chapter{Resultate}
 \section{Performance}
-TODO
+Wie in Kapitel \ref{ch:NFRs} \nameref{ch:NFRs} beschrieben, ist die Performance eine der wichtigsten nicht-funktionalen Anforderungen. Dies hatte zur Folge, dass besonders viel Zeit in dessen Optimierung investiert wurde. In Kapitel \ref{ch:performance} \nameref{ch:performance} wird genauer auf die durchgeführten Optimierungen eingegangen.\\
+Grundsätzlich gab es drei verschiedene Stufen von Performance, die erreicht wurden. In diesem Kapitel werden diese vier Stufen genauer analysiert und beschrieben.
+\subsubsection*{Stufe 1}
+In der ersten Stufe, zu Beginn des Projektes, wurde das gesamte Verkehrsmodell-Netzwerk mittels einer einzigen Abfrage beim Öffnen der Applikation geladen. Dabei wurde mit dem öffentlichen Netzwerk von Santiago de Chile gearbeitet. Dies beinhaltet ca. 60'000 Datensätze. Gemäss Tests benötigte diese Abfrage im Durchschnitt ca. 6 Sekunden. Mittels dieser Vorgehensweise wäre es unmöglich gewesen, ein Netzwerk wie die Schweiz, mit ca. 4 Millionen Datensätzen, auf dieser Applikation zu laden und anzuzeigen.
+\subsubsection*{Stufe 2}
+In der nächsten Stufe 
+\subsubsection*{Stufe 3}
+\subsubsection*{Stufe 4}
+v0.2:
+Arbeitete noch mit Santiago, Lädt das komplette JSON mit ca. 60'000 Datensätzen
+Benötigt für das Laden dieser Datensätze:
+5954 ms
+5717 ms
+5951 ms
+5978 ms
+6175 ms
+6184 ms
+6204 ms
+5924 ms
+6058 ms
+5882 ms
+-------
+60'027 ms / 10 = 6002,7 ms
+
+Browser würde mit 4 Millionen Datensätzen komplett crashen.
+
+v0.3:
+Vorher:
+Bei tiefen Zoomlevel:
+1000ms - 3000ms
+Bei höheren Zoomlevel:
+3000ms - 10000ms
+
+Nach dem entfernen von JOINS und Hinzufügen von Index
+Bei tiefen Zoomlevel:
+50ms - 100ms
+Bei höheren Zoomlevel:
+50ms - 300ms
+
+v0.4:
+Performance deutlich höher:
+bei tiefen Zoomlevel:
+50ms - 100ms
+bie höheren Zoomlevel:
+50ms - 300ms
+
 \section{Rückblick Technologien}
 \subsection*{Leaflet}
 \subsection*{Leaflet GeoJSON Tile Layer}

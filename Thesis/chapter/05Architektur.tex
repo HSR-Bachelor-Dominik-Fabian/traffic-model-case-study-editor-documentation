@@ -1,10 +1,10 @@
 \chapter{Konzepte \& Architektur}
 \label{ch:konzepte_architektur}
 \section{Konzepte}
-Für die Bewältigung der Anforderungen an die Softwarelösung wurden Konzepte entwickelt, welche Einfluss auf die einzelnen Komponenten und die Architektur haben. Die Softwarelösung soll wie unter Kapitel \ref{ch:anforderungen_section} \nameref{ch:anforderungen_section} beschrieben,  die Möglichkeit bieten, Simulationsdaten auf einer Karte darzustellen, sowie auch deren Bearbeitung ermöglichen. Wichtig ist dabei, dass die Bearbeitung keinen Einfluss auf die Stammdaten hat. Die dafür benötigten Konzepte, werden in diesem Kapitel beschrieben.
+Für die Bewältigung der Anforderungen an die Softwarelösung wurden Konzepte entwickelt, welche Einfluss auf die einzelnen Komponenten und die Architektur haben. Die Softwarelösung soll wie unter Kapitel \ref{ch:anforderungen_section} \nameref{ch:anforderungen_section} beschrieben,  die Möglichkeit bieten, Simulationsdaten auf einer Karte darzustellen, sowie auch deren Bearbeitung ermöglichen. Wichtig ist dabei, dass die Bearbeitung keinen Einfluss auf die Stammdaten hat. Die dafür benötigten Konzepte werden in diesem Kapitel beschrieben.
 \subsection{Daten QuadTiles}
 \label{ch:datentiles}
-Der Umgang mit der grossen Datenmenge (ca. 4 Millionen Datensätze für die Schweiz) ist eine grosse Herausforderung dieser Arbeit. Um diese grosse Datenmenge zu bewältigen, wurde ein bewährtes Verfahren für die Kartendarstellung verwendet. Dies ist der QuadTile Algorithmus von OpenStreetMap \citep{OSMQuadTiles}. Dabei werden die Daten nicht als Gesamtes geliefert, sondern über Teilbereiche, sogenannte Tiles, angefragt. Ein Tile ist ein Quadrat, welches ein vordefinierten Bereich der Welt abdeckt. Dies ermöglicht es einzelne Bereiche (Tiles), die zur Zeit angezeigt werden, zu laden und nicht immer den kompletten Datenstamm. Ein weiteres Konzept, in Verbindung mit dem QuadTile Algorithmus, wird unter Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben. Dabei werden die Daten für jede Zoomstufe bewertet und lediglich bei Relevanz mitgeliefert. Durch diese beiden Konzepte kann die Datenmenge, die von der Website verarbeitet werden muss, stark reduziert werden.
+Der Umgang mit der grossen Datenmenge (ca. 4 Millionen Datensätze für die Schweiz) ist eine grosse Herausforderung dieser Arbeit. Um diese grosse Datenmenge zu bewältigen, wurde ein bewährtes Verfahren für die Kartendarstellung verwendet. Dies ist der QuadTile Algorithmus von OpenStreetMap \citep{OSMQuadTiles}. Dabei werden die Daten nicht als Gesamtes geliefert, sondern über Teilbereiche, sogenannte Tiles, angefragt. Ein Tile ist ein Quadrat, welches einen vordefinierten Bereich der Welt abdeckt. Dies ermöglicht es, nur einzelne Bereiche (Tiles), die zur Zeit angezeigt werden, und nicht immer den kompletten Datenstamm zu laden. Ein weiteres Konzept, in Verbindung mit dem QuadTile Algorithmus wird unter Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben. Dabei werden die Daten für jede Zoomstufe bewertet und lediglich bei Relevanz mitgeliefert. Durch diese beiden Konzepte kann die Datenmenge, die von der Website verarbeitet werden muss, stark reduziert werden.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/BingMapsTileSystem.jpg}
@@ -13,13 +13,13 @@ Der Umgang mit der grossen Datenmenge (ca. 4 Millionen Datensätze für die Schw
 \label{fig:tilesystem}
 \end{figure}
 \noindent
-Um von einem Datensatz (Link oder Node) auf das Tile zu schliessen, in welchem dieser sichtbar ist, wird ein Schlüssel (QuadKey) berechnet. Der QuadKey benennt eindeutig das kleinstmögliche Tile in welchem der komplette Datensatz ersichtlich ist. Der QuadKey setzt sich, wie in Abbildung \ref{fig:tilesystem} ersichtlich, aus der Nummerierung der Teilbereiche zusammen. Dabei wird die Welt in der äussersten Zoomstufe in 4 Bereiche aufgeteilt, die von 0 bis 3 durch nummeriert werden. Für die nächste Stufe, wird jeder Bereich aus Level 1 je wieder in 4 Bereiche aufgeteilt. Diese neuen Teilbereiche werden dann wieder nummeriert. Dabei wird die Nummerierung des vorhergehenden Bereichs als Prefix verwendet und wieder von 0 bis 3 durch nummeriert. Dadurch kann jeder Bereich auf jeder Zommstufe eindeutig adressiert werden. Dieser Algorithmus bietet ebenfalls die Möglichkeit, mit Hilfe des QuadKeys alle darunterliegenden Bereiche zu finden, weil dieser QuadKey ein Prefix aller QuadKeys ist, die unter diesem Bereich liegen. Dieser Ansatz wird für die Filterung der Daten verwendet.
+Um von einem Datensatz (Link oder Node) auf das Tile zu schliessen, in welchem dieser sichtbar ist, wird ein Schlüssel (QuadKey) berechnet. Der QuadKey benennt eindeutig das kleinstmögliche Tile, in welchem der komplette Datensatz ersichtlich ist. Der QuadKey setzt sich aus der Nummerierung der Teilbereiche zusammen (vgl. Abbildung \ref{fig:tilesystem}). Dabei wird die Welt in der äussersten Zoomstufe in 4 Bereiche aufgeteilt, die von 0 bis 3 durchnummeriert werden. Für die nächste Stufe wird jeder Bereich aus Level 1 erneut in 4 Bereiche aufgeteilt. Diese neuen Teilbereiche werden dann nummeriert. Dabei wird die Nummerierung des vorhergehenden Bereichs als Prefix verwendet und wieder von 0 bis 3 durchnummeriert. Dadurch kann jeder Bereich auf jeder Zommstufe eindeutig adressiert werden. Dieser Algorithmus bietet ebenfalls die Möglichkeit, mit Hilfe des QuadKeys alle darunterliegenden Bereiche zu finden, weil dieser QuadKey ein Prefix aller QuadKeys ist, die unter diesem Bereich liegen. Dieser Ansatz wird für die Filterung der Daten verwendet.
 \subsection{Preprocessing und Bewertung der Daten}\label{sec:concept_preprocessing}
-Ein wichtiges Ziel der Aufbereitung der Daten, ist das verringern der Zugriffszeiten auf die Datenbank. Diese Aufbereitung findet direkt beim Import statt. Durch diesen Vorgang werden bewusst Redundanzen in das Datenmodell eingeführt. Diese Redundanzen erlauben den Zugriff auf Daten ohne teure JOIN Statements oder SQL-Funktionen aufzurufen. Auf die Berechnungen und Aufbereitungen, die beim Import des Datenmodells angewendet werden, wird genauer im Kapitel \ref{sec:tilingdataimplementation} \nameref{sec:tilingdataimplementation} eingegangen.
+Ein wichtiges Ziel der Aufbereitung der Daten ist das Verringern der Zugriffszeiten auf die Datenbank. Diese Aufbereitung findet direkt beim Import statt. Durch diesen Vorgang werden bewusst Redundanzen in das Datenmodell eingeführt. Diese Redundanzen erlauben den Zugriff auf Daten ohne teure JOIN Statements oder SQL-Funktionen aufzurufen. Auf die Berechnungen und Aufbereitungen, die beim Import des Datenmodells angewendet werden, wird genauer im Kapitel \ref{sec:tilingdataimplementation} \nameref{sec:tilingdataimplementation} eingegangen.
 \newpage
 \subsection{Changeset}\label{sec:changeset}
-Der Benutzer kann auf dem Verkehrsmodell-Fallstudien-Editor Änderungen vornehmen und anschliessend persistieren. Dafür wurde ein Konzept entwickelt, dass es erlaubt Änderungen an den Daten abzuspeichern, ohne die Stammdaten direkt anzupassen. Arbeitet der Benutzer direkt mit den Stammdaten, hat dies zur Folge, dass für jeden Benutzer die gesamten Stammdaten separat abgelegt werden muss. Dies ist eine unnötige Redundanz der Daten und kostet unnötig viel Speicherplatz.\\
-Um dem entgegen zu wirken, wird das Konzept Changeset verwendet. Dabei werden die Stammdaten nur einmalig abgelegt und von jedem Benutzer verwendet. Die Struktur eines Changesets stellt ein Abbild der Struktur der Stammdaten dar. Führt ein Benutzer eine Änderung an den Daten durch, wird lediglich die Differenz zu den Stammdaten in diesem Changeset abgelegt. Somit ist es möglich, wie in Abbilung \ref{fig:changeset_example} ersichtlich, das Changeset eines Benutzers als Differenz über die Stammdaten zu legen und somit den aktuellen Datensatz zu erhalten. Sollten Änderungen an den Stammdaten gemacht werden, sind diese direkt bei allen Benutzern ersichtlich, insofern die Änderungen nicht durch das Changeset überdeckt werden.
+Der Benutzer kann auf dem Verkehrsmodell-Fallstudien-Editor Änderungen vornehmen und anschliessend persistieren. Dafür wurde ein Konzept entwickelt, das es erlaubt, Änderungen an den Daten abzuspeichern ohne die Stammdaten direkt anzupassen. Arbeitet der Benutzer direkt mit den Stammdaten, hat dies zur Folge, dass für jeden Benutzer die gesamten Stammdaten separat abgelegt werden müssen. Dies ist eine unnötige Redundanz der Daten und kostet viel Speicherplatz.\\
+Um dem entgegen zu wirken, wird das Konzept Changeset verwendet. Dabei werden die Stammdaten nur einmalig abgelegt und von jedem Benutzer verwendet. Die Struktur eines Changesets stellt ein Abbild der Struktur der Stammdaten dar. Führt ein Benutzer eine Änderung an den Daten durch, wird lediglich die Differenz zu den Stammdaten in diesem Changeset abgelegt. Somit ist es möglich, wie in Abbilung \ref{fig:changeset_example} ersichtlich, das Changeset eines Benutzers als Differenz über die Stammdaten zu legen und somit den aktuellen Datensatz zu erhalten. Sollten Änderungen an den Stammdaten gemacht werden, sind diese direkt bei allen Benutzern ersichtlich, sofern die Änderungen nicht durch das Changeset überdeckt werden.
 \begin{figure}[H]
 \centering
 \includegraphics[height=6cm]{images/changeset.PNG}
@@ -28,10 +28,10 @@ Um dem entgegen zu wirken, wird das Konzept Changeset verwendet. Dabei werden di
 \end{figure}
 \noindent
 \subsection{User Interface - Konzept}\label{sec:uiconcept}
-Das User Interface ist eine zentrale Komponente des Verkehrsmodell-Fallstudien-Editors. Eine Voraussetzung für ein optimales User Interface, ist ein einfaches und intuitives Konzept, das ohne grosse Einarbeitungszeit zu bedienen ist. Für dieses Konzept diente Google Maps \cite{GoogleMaps} sowie auch der ID Editor \citep{IDEditor} von OpenStreetMap als Inspirationsquelle für das User Handling. Google Maps ist die am weitesten verbreitete Web Anwendung, wenn es um die Benutzung einer Karte im Browser geht. Für die Bearbeitung der Daten dient der oft genutzte ID Editor als Vorlage. Beide Web Applikationen besitzen ein durchdachtes Design, an dessen Bedienung sich die Benutzer gewöhnt sind.
+Das User Interface ist eine zentrale Komponente des Verkehrsmodell-Fallstudien-Editors. Eine Voraussetzung für ein optimales User Interface ist ein einfaches und intuitives Konzept, das ohne grosse Einarbeitungszeit zu bedienen ist. Für dieses Konzept diente Google Maps \cite{GoogleMaps} sowie auch der ID Editor \citep{IDEditor} von OpenStreetMap als Inspirationsquelle für das User Handling. Google Maps ist die am weitesten verbreitete Web Anwendung in Bezug auf die Benutzung einer Karte im Browser. Für die Bearbeitung der Daten dient der oft genutzte ID Editor als Vorlage. Beide Web Applikationen besitzen ein durchdachtes Design, an dessen Bedienung sich die Benutzer gewöhnt sind.
 \newpage
 \subsubsection{Google Maps}
-Google Maps ist eines der am weitesten verbreiteten Kartensystemen. Der Benutzer ist sich an das Handling von Google Maps gewöhnt und kann mit Systemen, die ähnlich aufgebaut sind, ohne Probleme arbeiten. Der grösste Vorteil von Google Maps ist die intuitive Bedienung, gekoppelt an ein einfaches, aufgeräumtes und leichtes Design.
+Google Maps ist eines der am weitesten verbreiteten Kartensysteme. Der Benutzer ist sich an das Handling von Google Maps gewöhnt und kann mit Systemen, die ähnlich aufgebaut sind, ohne Probleme arbeiten. Der grösste Vorteil von Google Maps ist die intuitive Bedienung, gekoppelt an ein einfaches, aufgeräumtes und leichtes Design.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/AnalyseGoogle.png}
@@ -39,18 +39,18 @@ Google Maps ist eines der am weitesten verbreiteten Kartensystemen. Der Benutzer
 \label{fig:googlemaps}
 \end{figure}
 \noindent
-Die Abbildung \ref{fig:googlemaps} zeigt die Auswertung der Analyse von Google Maps. Die Karte selbst, erhält sehr viel Platz und alle Bedienelemente (Controls) werden am Randbereich der Karte angeordnet. Dadurch ist sichergestellt, dass sich der Benutzer auf eine Kernaufgabe konzentriert und sich nicht ablenken lässt. Bei schlechteren Beispielen, auf denen die Karte nur wenig Platz erhält, fühlt sich der Benutzer sehr schnell eingegrenzt und muss deutlich mehr Aufwand ins Zoomen und seitlich Bewegen investieren. Dies kann einen Benutzer stören und ihn vom schnellen Erledigen der Aufgabe abhalten. Das User Interface passt sich laufend an die Nutzung des Benutzers an. Hat der Benutzer also einen Ort gefunden und möchten eine Route berechnen, wird ihm neu ein Menü eingeblendet, das ihm dies ermöglicht. Dadurch wird zwar der Karte Platz genommen, jedoch liegt nun das Hauptaugenmerk auf dem Planen der Route. Zusätzlich zum Einsparen von Platz werden bei den Bedienelementen meist kein Text sondern Symbole eingesetzt.
+Die Abbildung \ref{fig:googlemaps} zeigt die Auswertung der Analyse von Google Maps. Die Karte selbst erhält sehr viel Platz und alle Bedienelemente (Controls) werden am Randbereich der Karte angeordnet. Dadurch ist sichergestellt, dass sich der Benutzer auf eine Kernaufgabe konzentriert und sich nicht ablenken lässt. Bei schlechteren Beispielen, auf denen die Karte nur wenig Platz erhält, fühlt sich der Benutzer sehr schnell eingegrenzt und muss deutlich mehr Aufwand ins Zoomen und das seitliche Bewegen investieren. Dies kann einen Benutzer stören und ihn vom schnellen Erledigen der Aufgabe abhalten. Das User Interface passt sich laufend an die Nutzung des Benutzers an. Hat der Benutzer einen Ort gefunden und möchte eine Route berechnen, wird ihm neu diesbezüglich ein Menü eingeblendet. Dadurch wird zwar der Karte Platz genommen, jedoch liegt nun das Hauptaugenmerk auf dem Planen der Route. Zusätzlich werden zum Einsparen von Platz bei den Bedienelementen meist kein Text sondern Symbole eingesetzt.
 \subsubsection*{Ergebnisse Analyse}
-Folgende Punkte, fliessen in das Design des Verkehrsmodell-Fallstudien-Editors mit ein:
+Folgende Punkte fliessen in das Design des Verkehrsmodell-Fallstudien-Editors mit ein:
 \begin{itemize}
 \itemsep0em
 \item Der Karte viel Platz einräumen.
 \item Menüs, welche nicht dem aktuellen Use Case entsprechen, ausblenden.
-\item Viele Symbole, wenig Text.
+\item Viele Symbole und wenig Text verwenden.
 \end{itemize}
 \newpage
 \subsubsection{ID Editor}
-Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. Er bietet die Möglichkeit Daten von OpenStreetMap direkt auf einer Karte zu bearbeiten. Die Änderungen werden dann als Changeset an OpenStreetMap übertragen und freigeschaltet. Die Funktionalität des Verkehrsmodell-Fallstudien-Editors ähnelt sehr stark den Funktionen des ID Editors. Aufgrund dessen wurde das User Interface des ID Editors ebenfalls analysiert.
+Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. Er bietet die Möglichkeit, Daten von OpenStreetMap direkt auf einer Karte zu bearbeiten. Die Änderungen werden dann als Changeset an OpenStreetMap übertragen und freigeschaltet. Die Funktionalität des Verkehrsmodell-Fallstudien-Editors ähnelt sehr stark den Funktionen des ID Editors. Aufgrund dessen wurde das User Interface des ID Editors ebenfalls analysiert.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/AnalyseIDEditor.png}
@@ -58,13 +58,13 @@ Der ID Editor von OpenStreetMap ist der bekannteste Editor für OpenStreetMap. E
 \label{fig:ideditor}
 \end{figure}
 \noindent
-Die Abbildung \ref{fig:ideditor} zeigt die Auswertung der Analyse des ID Editor. Eine Kerneigenschaft des User Interfaces ist es, dass die Daten erst ab einer gewissen Zoomstufe angezeigt werden. Dies hauptsächlich, weil der ID Editor eine deutlich grössere Datenmenge verarbeiten muss. Diese Eigenschaft ermöglicht es dem ID Editor, die Datenmenge, die zur selben Zeit dargestellt werden muss, auf ein Minimum zu reduzieren. Das Bearbeitungsmenü (Editor Menü) ist so aufgebaut, dass es nach dem Auswählen eines Elements die dazugehörigen Daten des Elements zur Bearbeitung anzeigt. Die Tatsache, dass die Karte dabei immer ersichtlich bleibt, ermöglicht eine leichte und schnelle Bedienung für den Benutzer. Eine weitere wichtige Funktion des ID Editors ist die Undo- / Redo-Funktion. Änderungen an Elementen können einfach wieder rückgängig gemacht werden oder dann wiederhergestellt werden.
+Die Abbildung \ref{fig:ideditor} zeigt die Auswertung der Analyse des ID Editors. Eine Kerneigenschaft des User Interfaces ist es, dass die Daten erst ab einer gewissen Zoomstufe angezeigt werden. Dies hauptsächlich, weil der ID Editor eine deutlich grössere Datenmenge verarbeiten muss. Diese Eigenschaft ermöglicht es dem ID Editor, die Datenmenge, die zur selben Zeit dargestellt werden muss, auf ein Minimum zu reduzieren. Das Bearbeitungsmenü (Editor Menü) ist so aufgebaut, dass es nach dem Auswählen eines Elements die dazugehörigen Daten des Elements zur Bearbeitung anzeigt. Die Tatsache, dass die Karte dabei immer ersichtlich bleibt, ermöglicht eine leichte und schnelle Bedienung für den Benutzer. Eine weitere wichtige Funktion des ID Editors ist die Undo- / Redo-Funktion. Änderungen an Elementen können einfach rückgängig gemacht werden oder wiederhergestellt werden.
 \subsubsection*{Ergebnisse Analyse}
-Folgende Punkte, fliessen in das Design des Verkehrsmodell-Fallstudien-Editors mit ein:
+Folgende Punkte fliessen in das Design des Verkehrsmodell-Fallstudien-Editors mit ein:
 \begin{itemize}
 \itemsep0em
-\item Karte bleibt stehen, während Bearbeitung von Strassenattributen.
-\item Bearbeitung der Strassen, durch Auswahl.
+\item Karte bleibt während der Bearbeitung von Strassenattributen ersichtlich.
+\item Bearbeitung der Strassen durch Auswahl (anklicken).
 \item Undo- / Redo-Funktion.
 \end{itemize}
 \newpage
@@ -77,7 +77,7 @@ Aus den Erkenntnissen der Analyse von Google Maps und dem ID Editor wurde folgen
 \label{fig:conceptui}
 \end{figure}
 \noindent
-Angelehnt an Google Maps, wir das User Interface eine Karte besitzen, die den gesamten Platz im Browser ausfüllt. Die Bedienelemente, in der linken oberen Ecke, werden als selbsterklärende Symbole dargestellt und sind während der gesamten Benutzung der Applikation ersichtlich. Menüs, die zur Zeit nicht gebraucht werden, sind, wie in Abbildung \ref{fig:conceptui} dargestellt, ausgeblendet. Dies bietet dem Benutzer viel Platz, für das Suchen und Auswählen einer für ihn relevanten Strasse. Durch das Auswählen einer Strasse, wird ein Menü von der rechten Seite her eingeblendet, das das Bearbeiten der Parameter dieser Strasse ermöglicht (sh. Abbildung \ref{fig:concepteditStreet}).
+Angelehnt an Google Maps, wird das User Interface eine Karte besitzen, die den gesamten Platz im Browser ausfüllt. Die Bedienelemente in der linken oberen Ecke werden als selbsterklärende Symbole dargestellt und sind während der gesamten Benutzung der Applikation ersichtlich. Menüs, die zur Zeit nicht gebraucht werden, sind wie in Abbildung \ref{fig:conceptui} dargestellt, ausgeblendet. Dies bietet dem Benutzer viel Platz für das Suchen und Auswählen einer für ihn relevanten Strasse. Durch das Auswählen einer Strasse wird ein Menü von der rechten Seite her eingeblendet, womit das Bearbeiten der Parameter dieser Strasse ermöglicht wird (vgl. Abbildung \ref{fig:concepteditStreet}).
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/KonzeptEditStreet.PNG}
@@ -86,7 +86,7 @@ Angelehnt an Google Maps, wir das User Interface eine Karte besitzen, die den ge
 \end{figure}
 \newpage
 \noindent
-Um die Wegführung einer Strasse zu bearbeiten kann der Benutzer in einen Bearbeitungsmodus wechseln. In diesem Modus werden zusätzlich zu den Links auch die Nodes angezeigt, die ansonsten aus Performancegründen nicht geladen werden. Der Benutzer kann eine Strasse auswählen und dessen Führung mit Hilfe eines Menüs ändern.
+Um die Wegführung einer Strasse zu bearbeiten, kann der Benutzer in einen Bearbeitungsmodus wechseln. In diesem Modus werden zusätzlich zu den Links auch die Nodes angezeigt, die ansonsten aus Performancegründen nicht geladen werden. Der Benutzer kann eine Strasse auswählen und deren Führung mit Hilfe eines Menüs ändern.
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{images/KonzeptChangeStreet.PNG}
@@ -99,7 +99,7 @@ Ein weiteres, naheliegendes Konzept für die Bearbeitung der Strassenführung, w
 \begin{figure}[H]
 \centering
 \includegraphics[height=12cm]{images/Architektur.png}
-\caption{Tier des Verkehrsmodell-Fallstudien-Editor}
+\caption{Tier des Verkehrsmodell-Fallstudien-Editors}
 \label{tier_architecture}
 \end{figure}
 Aufgrund der Anforderungen bezüglich Performance und Antwortgeschwindigkeit an diese Arbeit, musste die Architektur für die Softwarelösung des Verkehrsmodell-Fallstudien-Editors skalierbar sein. D.h. es muss eine Entkopplung der Komponenten durchgeführt werden, die es erlaubt, die Last auf mehrere Server zu verteilen und dadurch eine höhere Last auf jedem einzelnen Server erlaubt.\\
@@ -111,7 +111,7 @@ Die Softwarelösung des Verkehrsmodell-Fallstudien-Editors ist als 3-Tier Applik
 \label{fig:tierlayers}
 \end{figure}
 \noindent
-Die Aufteilung der Presentation Logic auf den Client-Tier, sowie den Backend-Tier erlaubt es die Last der Datendarstellung auf die verschiedenen Komponenten zu verteilen. Die Vorbereitung und Aufbereitung der Daten wird vom Backend-Tier vorgenommen. Die Daten werden in einem, für den Client lesbaren, Format übertragen. Das Rendering der Daten übernimmt dann der Client.\\
+Die Aufteilung der Presentation Logic auf den Client-Tier sowie den Backend-Tier erlaubt es, die Last der Datendarstellung auf die verschiedenen Komponenten zu verteilen. Die Vorbereitung und Aufbereitung der Daten wird vom Backend-Tier vorgenommen. Die Daten werden in einem für den Client lesbaren Format übertragen. Das Rendering der Daten übernimmt dann der Client.\\
 In Abbildung \ref{fig:tierlayers} ist die gesamte Tier- und Layeraufteilung ersichtlich.
 \section{SimMapEditor}
 \begin{figure}[H]
@@ -121,7 +121,7 @@ In Abbildung \ref{fig:tierlayers} ist die gesamte Tier- und Layeraufteilung ersi
 \label{fig:presentationlayer}
 \end{figure}
 \noindent
-Der SimMapEditor ist die Frontend-Komponente der Architektur und basiert auf dem Play Framework. Der Client-Tier ist eine in Javascript entwickelte Software. Für die Abfrage der Daten, die auf der Karte dargestellt werden, greift sie auf den Backend-Tier zu. Das Rendering der Daten übernimmt ebenfalls der SimMapEditor. Er selbst besitzt keine eigene Business Logik, denn die ist komplett auf den Backend-Tier aufgelagert und dadurch nicht im Play Framework implementiert. Der SimMapEditor ist dafür zuständig, das User Interface Konzept (sh. \ref{sec:uiconcept} \nameref{sec:uiconcept}) sowie auch das Tiling der Daten (sh. \ref{ch:datentiles} \nameref{ch:datentiles}) zu implementieren und somit die Daten für die Karte vom Backend-Tier in Bereichen anfordert.
+Der SimMapEditor ist die Frontend-Komponente der Architektur und basiert auf dem Play Framework. Der Client-Tier ist eine in Javascript entwickelte Software. Für die Abfrage der Daten, die auf der Karte dargestellt werden, greift sie auf den Backend-Tier zu. Das Rendering der Daten übernimmt ebenfalls der SimMapEditor. Er selbst besitzt keine eigene Business Logik, da diese komplett auf den Backend-Tier ausgelagert und dadurch nicht im Play Framework implementiert ist. Der SimMapEditor ist dafür zuständig, das User Interface Konzept (vgl. \ref{sec:uiconcept} \nameref{sec:uiconcept}) sowie auch das Tiling der Daten (vgl. \ref{ch:datentiles} \nameref{ch:datentiles}) zu implementieren und somit die Daten für die Karte vom Backend-Tier in Bereichen anzufordern.
 \section{SimMapService}
 \begin{figure}[H]
 \centering
@@ -130,11 +130,11 @@ Der SimMapEditor ist die Frontend-Komponente der Architektur und basiert auf dem
 \label{fig:businesslogiclayer}
 \end{figure}
 \noindent
-Der SimMapService stellt den Backend-Tier der Softwarelösung dar und ist in einer 3-Layer Architektur implementiert. Er wird als REST Service (Maturity Level 2 \cite{RESTMaturity}) entwickelt. Um dem Maturity Level 2 zu entsprechen, werden die Anfragen und Antworten des Services mit HTTP Standard Methoden und Codes ausgestattet. Mit den Codes wird dem Client angezeigt, welchen Status die Antwort besitzt. Z.B. wird bei einer erfolgreichen Anfrage, in der keine Daten in der Antwort enthalten sind, der HTTP Status Code \glqq{}204 - No Content\grqq{} zurückgesendet. Somit weiss der Client, dass die Anfrage erfolgreich war, jedoch keine Daten im Body enthalten sind. Für das Entgegennehmen, Verarbeiten und Aufbauen der Antworten mit den korrekten Codes ist die Presentation Logic Schicht des SimMapServices zuständig.\\
-Die Application Logic Schicht des SimMapServices ist dafür zuständig, die Aufbereitungen, welche im Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing} beschrieben sind, durchzuführen. Zusätzlich lädt er Daten, je nach Zoomstufe und Koordinaten, aus der Resource Logic Schicht und bereitet diese auf. Anschliessend werden diese Daten an die Presentation Logic Schicht, für das Weiterleiten an den Client, weitergegeben.\\
-Die Resource Logic Schicht bietet der Application Logic Schicht die Möglichkeit, auf die Daten in der Datenbank zuzugreifen. Die primäre Aufgabe dabei ist es, die Abfragen auf die Datenbank zu erstellen und durchzuführen.
+Der SimMapService stellt den Backend-Tier der Softwarelösung dar und ist in einer 3-Layer Architektur implementiert. Er wird als REST Service (Maturity Level 2 \cite{RESTMaturity}) entwickelt. Um dem Maturity Level 2 zu entsprechen, werden die Anfragen und Antworten des Services mit HTTP Standard Methoden und Codes ausgestattet. Mit den Codes wird dem Client angezeigt, welchen Status die Antwort besitzt. Beispielsweise wird bei einer erfolgreichen Anfrage, in der keine Daten in der Antwort enthalten sind, der HTTP Status Code \glqq{}204 - No Content\grqq{} zurückgesendet. Somit weiss der Client, dass die Anfrage erfolgreich war, jedoch keine Daten im Body enthalten sind. Für das Entgegennehmen, Verarbeiten und Aufbauen der Antworten mit den korrekten Codes ist die Presentation Logic Schicht des SimMapServices zuständig.\\
+Die Application Logic Schicht des SimMapServices ist für die Durchführung der  Aufbereitung (vgl. Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing}) zuständig. Zusätzlich lädt die Application Logic Schicht je nach Zoomstufe und Koordinaten Daten aus der Resource Logic Schicht aus und bereitet diese auf. Anschliessend werden diese Daten an die Presentation Logic Schicht für das Weiterleiten an den Client weitergegeben.\\
+Die Resource Logic Schicht bietet der Application Logic Schicht die Möglichkeit, auf die Daten in der Datenbank zuzugreifen. Dabei ist es die primäre Aufgabe dieser Schicht, Datenbankabfragen zu erstellen und durchzuführen.
 \section{Datenbank}
-Aufgrund der grossen Datenmenge, welche ein Verkehrsmodell umfassen kann, ist die Datenbank ein essenzieller Teil der Architektur. Das Datenmodell wurde darauf ausgelegt die Stammdaten, von den Daten der Changesets (sh. \ref{sec:changeset} \nameref{sec:changeset}) zu trennen.\\
+Aufgrund der grossen Datenmenge, welche ein Verkehrsmodell umfassen kann, ist die Datenbank ein essentieller Teil der Architektur. Das Datenmodell wurde auf die Trennung der Stammdaten, von den Daten der Changesets (vgl. \ref{sec:changeset} \nameref{sec:changeset}) ausgelegt.\\
 \begin{figure}[H]
 \centering
 \includegraphics[height=10cm]{images/SimmapDatabase.jpg}
@@ -142,6 +142,6 @@ Aufgrund der grossen Datenmenge, welche ein Verkehrsmodell umfassen kann, ist di
 \label{fig:databasescheme}
 \end{figure}
 \noindent
-Die zentrale Komponente des Datenbankschemas, wie in Abbildung \ref{fig:databasescheme} ersichtlich, ist das Netzwerk. Das Netzwerk wird aus dem XML eingelesen, das über den Service importiert wurde. Jedes Netzwerk enthält sowohl Links als auch Nodes, die zusammen die Strassen des Verkehrsmodells bilden. In der Tabelle Network\textunderscore Options werden generelle Eigenschaften des Netzwerks, aus dem XML, gespeichert.\\
-Die Tabellen Node\textunderscore Change und Link\textunderscore Change stellen ein Abbild der Tabellen Node und Link dar. In diese beiden Tabellen sowie auch der Tabelle Changeset werden die Daten eines Changesets abgespeichert. Dabei ist wichtig, dass lediglich die Differenz zu den originalen Datensätzen aus den Tabellen Link und Node abgespeichert werden. Die restlichen Spalten werden auf null gesetzt.\\
-Das Datenmodell enthält bewusst einige Redundanzen. Die Koordinaten der Nodes werden aus Performancegründen sowohl direkt auf dem Node als auch in den dazugehörigen Links abgespeichert. Im Kapitel \ref{ch:redundance} \nameref{ch:redundance} werden die Gründe dazu, genauer erläutert.
+Die zentrale Komponente des Datenbankschemas, wie in Abbildung \ref{fig:databasescheme} ersichtlich, ist das Netzwerk. Das Netzwerk wird aus dem XML eingelesen, das über den Service importiert wurde. Jedes Netzwerk enthält sowohl Links als auch Nodes, die zusammen die Strassen des Verkehrsmodells bilden. In der Tabelle Network\textunderscore Options werden generelle Eigenschaften des Netzwerks aus dem XML gespeichert.\\
+Die Tabellen Node\textunderscore Change und Link\textunderscore Change stellen ein Abbild der Tabellen Node und Link dar. In diesen beiden Tabellen sowie auch der Tabelle Changeset werden die Daten eines Changesets abgespeichert. Dabei ist wichtig, dass lediglich die Differenz zu den originalen Datensätzen aus den Tabellen Link und Node abgespeichert werden. Die restlichen Spalten werden auf null gesetzt.\\
+Das Datenmodell enthält bewusst einige Redundanzen. Die Koordinaten der Nodes werden aus Performancegründen sowohl direkt auf dem Node als auch in den dazugehörigen Links abgespeichert. Im Kapitel \ref{ch:redundance} \nameref{ch:redundance} werden die Gründe dazu genauer erläutert.

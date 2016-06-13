@@ -1,6 +1,24 @@
 \chapter{Resultate}
 \section{Performance}
-TODO
+Wie in Kapitel \ref{ch:NFRs} \nameref{ch:NFRs} beschrieben, ist die Performance eine der wichtigsten nicht-funktionalen Anforderungen. Dies hatte zur Folge, dass besonders viel Zeit in deren Optimierung investiert wurde. In Kapitel \ref{ch:performance} \nameref{ch:performance} wird genauer auf die durchgeführten Optimierungen eingegangen.\\
+Grundsätzlich gab es drei verschiedene Stufen von Performance, die erreicht wurden. In diesem Kapitel werden diese drei Stufen genauer analysiert und beschrieben.
+\subsubsection*{Stufe 1}
+In der ersten Stufe, zu Beginn des Projektes, wurde das gesamte Verkehrsmodell-Netzwerk mittels einer einzigen Abfrage beim Öffnen der Applikation geladen. Dabei wurde mit dem öffentlichen Netzwerk von Santiago de Chile gearbeitet. Dies beinhaltet ca. 60'000 Datensätze. Gemäss Tests benötigte diese Abfrage im Durchschnitt ca. 6 Sekunden. Mittels dieser Vorgehensweise wäre es unmöglich gewesen, ein Netzwerk wie die Schweiz mit ca. 4 Millionen Datensätzen in dieser Applikation zu laden und anzuzeigen.
+\subsubsection*{Stufe 2}
+In der nächsten Stufe wurde der QuadTile Algorithmus von OpenStreetMap eingeführt. Dadurch wird nicht mehr das gesamte Verkehrsmodell-Netzwerk geladen, sondern die Daten in Bereiche aufgeteilt. In dieser Stufe war es bereits möglich mit den 4 Millionen Datensätzen aus dem Verkehrsmodell der Schweiz zu arbeiten. Obwohl die Antwortzeiten immer noch deutlich zu hoch waren, konnte das Anzeigen des Schweizer Verkehrsmodells gemeistert werden.\\
+Folgende Zugriffszeiten wurden gemessen:\\[0.3cm]
+\begin{tabular}{ l c l}
+Zoomstufen 10 - 14 & => & 1 - 3 Sekunden \\
+Zoomstufen 14 - 18 & => & 3 - 10 Sekunden \\ 
+\end{tabular} 
+\subsubsection*{Stufe 3}
+In der dritten Stufe wurden besonders im Backend sehr viele Optimierungen vorgenommen. Sei dies das Client-seitiges Caching, das Verhindern vom erneuten Zeichnen einer Strasse beim Wechsel der Zoomstufe, der Einsatz einer speziellen Operator Klasse für den Index oder die absichtliche Redundanz in dem Datenmodell. Genauere Beschreibungen der einzelnen Optimierungen sind in Kapitel \ref{ch:performance} \nameref{ch:performance} zu finden. Alle diese Optimierungen zusammen führten dazu, dass die Applikation eine deutlich höhere Performance aufwies und dadurch die Bearbeitung der Schweizer Verkehrsmodells kein Problem mehr darstellte.\\
+Folgende Zugriffszeiten wurden gemessen:\\[0.3cm]
+\begin{tabular}{ l c l}
+Zoomstufen 10 - 14 & => & 50 - 100 Millisekunden \\
+Zoomstufen 14 - 18 & => & 100 - 300 Millisekunden \\ 
+\end{tabular}\\[0.3cm]
+Die daraus resultierte Performance erfüllt die Anforderungen und ermöglicht ein benutzerfreundliches Bearbeiten des Schweizer Verkehrsmodells. Dennoch entsprechen die geladenen Links und Nodes einer sehr grosse Datenmenge, zum Teil mehr als 10'000 Datensätze pro Anzeige. Das Rendering dieser Datenmenge benötigt eine gewisse Zeit und verzögert dadurch das Darstellen der Daten auf der Karte. Auf die Geschwindigkeit des Renderings des Browsers konnte jedoch kein Einfluss genommen werden.
 \section{Rückblick Technologien}
 \subsection*{Leaflet}
 Für die Darstellung der Karte wird die Library Leaflet, in Verbindung mit D3.js, verwendet. Die Vorteile von Leaflet liegen in der Möglichkeit verschiedene Layer dynamisch zu erzeugen und übereinander anzuordnen. Leaflet besitzt auch die Möglichkeit GeoJSON zu interpretieren und in SVG Geometrien darzustellen. Nachteile sind die fehlende Touch-Optimierung, durch welche es schwer ist die Karte auf Mobile-Geräten zu verwenden. Weiter besitzt Leaflet keine native Möglichkeit GeoJSON Daten von einem Service über das Tile-System zu beziehen. Diese Möglichkeit musste mit dem Plugin Leaflet GeoJSON Tile Layer hinzugefügt werden.

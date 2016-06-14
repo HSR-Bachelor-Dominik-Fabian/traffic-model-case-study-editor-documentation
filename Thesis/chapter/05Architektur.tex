@@ -91,7 +91,7 @@ Um die Wegführung einer Strasse zu bearbeiten, kann der Benutzer in einen Bearb
 \centering
 \includegraphics[height=7cm]{images/KonzeptChangeStreet.PNG}
 \caption{Wireframe Strassenführung bearbeiten}
-\label{fig:concepteditStreet}
+\label{fig:concepteditStreetPath}
 \end{figure}
 \noindent
 Ein weiteres, naheliegendes Konzept für die Bearbeitung der Strassenführung, wäre ein Drag \& Drop Verfahren. Dieses Konzept wäre für den Benutzer am einfachsten, ist jedoch sehr zeitintensiv in der Implementation. Aus Zeitgründen musste dadurch auf Drag \& Drop verzichtet werden.
@@ -111,7 +111,7 @@ Die Softwarelösung des Verkehrsmodell-Fallstudien-Editors ist als 3-Tier Applik
 \label{fig:tierlayers}
 \end{figure}
 \noindent
-Die Aufteilung der Presentation Logic auf den Client-Tier sowie den Backend-Tier erlaubt es, die Last der Datendarstellung auf die verschiedenen Komponenten zu verteilen. Die Vorbereitung und Aufbereitung der Daten wird vom Backend-Tier vorgenommen. Die Daten werden in einem für den Client lesbaren GeoJSON \cite{GeoJSON} Format übertragen. Das Rendering der Daten übernimmt dann der Client.\\
+Die Aufteilung der Presentation Logic auf den Client-Tier sowie den Backend-Tier erlaubt es, die Last der Datendarstellung auf die verschiedenen Komponenten zu verteilen. Die Vorbereitung und Aufbereitung der Daten wird vom Backend-Tier übernommen. Die Daten werden anschliessend in einem für den Client lesbaren GeoJSON \cite{GeoJSON} Format an den Client-Tier übertragen, der dann das Rendering dieser Daten übernimmt.\\
 In Abbildung \ref{fig:tierlayers} ist die gesamte Tier- und Layeraufteilung ersichtlich.
 \section{SimMapEditor}
 \begin{figure}[H]
@@ -121,7 +121,7 @@ In Abbildung \ref{fig:tierlayers} ist die gesamte Tier- und Layeraufteilung ersi
 \label{fig:presentationlayer}
 \end{figure}
 \noindent
-Der SimMapEditor ist die Frontend-Komponente der Architektur und basiert auf dem Play Framework. Der Client-Tier ist eine in Javascript entwickelte Software. Für die Abfrage der Daten, die auf der Karte dargestellt werden, greift sie asynchron über Ajax auf den Backend-Tier zu. Das Rendering der Daten übernimmt ebenfalls der SimMapEditor. Er selbst besitzt keine eigene Business Logik, da diese komplett auf den Backend-Tier ausgelagert und dadurch nicht im Play Framework implementiert ist. Der SimMapEditor ist dafür zuständig, das User Interface Konzept (vgl. \ref{sec:uiconcept} \nameref{sec:uiconcept}) sowie auch das Tiling der Daten (vgl. \ref{ch:datentiles} \nameref{ch:datentiles}) zu implementieren und somit die Daten für die Karte vom Backend-Tier in Bereichen anzufordern.
+Der SimMapEditor ist die Frontend-Komponente der Architektur und basiert auf dem Play Framework. Der Client-Tier ist eine in Javascript entwickelte Software. Für die Abfrage der Daten, die auf der Karte dargestellt werden, greift sie asynchron über Ajax auf den Backend-Tier zu. Das Rendering der Daten übernimmt ebenfalls der SimMapEditor. Er selbst besitzt keine eigene Business Logik, da diese komplett auf den Backend-Tier ausgelagert und dadurch nicht im Play Framework implementiert ist. Der SimMapEditor ist dafür zuständig, das User Interface Konzept (vgl. Kapitel \ref{sec:uiconcept} \nameref{sec:uiconcept}) sowie auch das Tiling der Daten (vgl. Kapitel \ref{ch:datentiles} \nameref{ch:datentiles}) zu implementieren und somit die Daten für die Karte vom Backend-Tier in Bereichen anzufordern.
 \section{SimMapService}
 \begin{figure}[H]
 \centering
@@ -134,7 +134,7 @@ Der SimMapService stellt den Backend-Tier der Softwarelösung dar und ist in ein
 Die Application Logic Schicht des SimMapServices ist für die Durchführung der  Aufbereitung (vgl. Kapitel \ref{sec:concept_preprocessing} \nameref{sec:concept_preprocessing}) zuständig. Zusätzlich lädt die Application Logic Schicht je nach Zoomstufe und Koordinaten Daten aus der Resource Logic Schicht aus und bereitet diese auf. Anschliessend werden diese Daten an die Presentation Logic Schicht für das Weiterleiten an den Client weitergegeben.\\
 Die Resource Logic Schicht bietet der Application Logic Schicht die Möglichkeit, auf die Daten in der Datenbank zuzugreifen. Dabei ist es die primäre Aufgabe dieser Schicht, Datenbankabfragen zu erstellen und durchzuführen.
 \section{Datenbank}
-Aufgrund der grossen Datenmenge, welche ein Verkehrsmodell umfassen kann, ist die Datenbank ein essentieller Teil der Architektur. Das Datenmodell wurde auf die Trennung der Stammdaten, von den Daten der Changesets (vgl. \ref{sec:changeset} \nameref{sec:changeset}) ausgelegt.\\
+Aufgrund der grossen Datenmenge, welche ein Verkehrsmodell umfassen kann, ist die Datenbank ein essentieller Teil der Architektur. Das Datenmodell wurde auf die Trennung der Stammdaten, von den Daten der Changesets (vgl. Kapitel \ref{sec:changeset} \nameref{sec:changeset}) ausgelegt.\\
 \begin{figure}[H]
 \centering
 \includegraphics[height=10cm]{images/SimmapDatabase.jpg}

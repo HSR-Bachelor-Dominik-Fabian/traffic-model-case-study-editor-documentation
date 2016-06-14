@@ -12,7 +12,7 @@ Zoomstufen 10 - 14 & => & 1 - 3 Sekunden \\
 Zoomstufen 14 - 18 & => & 3 - 10 Sekunden \\ 
 \end{tabular} 
 \subsubsection*{Stufe 3}
-In der dritten Stufe wurden besonders im Backend sehr viele Optimierungen vorgenommen. Sei dies das Client-seitiges Caching, das Verhindern vom erneuten Zeichnen einer Strasse beim Wechsel der Zoomstufe, der Einsatz einer speziellen Operator Klasse für den Index oder die absichtliche Redundanz in dem Datenmodell. Genauere Beschreibungen der einzelnen Optimierungen sind in Kapitel \ref{ch:performance} \nameref{ch:performance} zu finden. Alle diese Optimierungen zusammen führten dazu, dass die Applikation eine deutlich höhere Performance aufwies und dadurch die Bearbeitung der Schweizer Verkehrsmodells kein Problem mehr darstellte.\\
+In der dritten Stufe wurden besonders im Backend sehr viele Optimierungen vorgenommen. Sei dies das Client-seitige Caching, das Verhindern vom erneuten Zeichnen einer Strasse beim Wechsel der Zoomstufe, der Einsatz einer speziellen Operator Klasse für den Index oder die absichtliche Redundanz in dem Datenmodell. Genauere Beschreibungen der einzelnen Optimierungen sind in Kapitel \ref{ch:performance} \nameref{ch:performance} zu finden. Alle diese Optimierungen zusammen führten dazu, dass die Applikation eine deutlich höhere Performance aufwies und dadurch die Bearbeitung des Schweizer Verkehrsmodells kein Problem mehr darstellte.\\
 Folgende Zugriffszeiten wurden gemessen:\\[0.3cm]
 \begin{tabular}{ l c l}
 Zoomstufen 10 - 14 & => & 50 - 100 Millisekunden \\
@@ -23,7 +23,7 @@ Die daraus resultierte Performance erfüllt die Anforderungen und ermöglicht ei
 \newpage
 \section{Rückblick Technologien}
 \subsection*{Leaflet}
-Für die Darstellung der Karte wird die Library Leaflet in Verbindung mit D3.js verwendet. Ein Vorteil von Leaflet liegt darin, verschiedene Schichten dynamisch zu erzeugen und übereinander anzuordnen. Zusätzlich können Daten im GeoJSON Format interpretiert werden und als SVG Geometrien dargestellt werden. Ein Nachteil ist die fehlende Optimierung für Touchscreens wodurch die Verwendung auf Mobilen Geräten erschwert wird. Zudem fehlt Leaflet die Möglichkeit GeoJSON Daten in Form des Tile-Systems zu beziehen. Diese Funktionalität wurde dann durch das Plugin Leaflet GeoJSON Tile Layer hinzugefügt.
+Für die Darstellung der Karte wird die Library Leaflet in Verbindung mit d3.js verwendet. Ein Vorteil von Leaflet liegt darin, verschiedene Schichten dynamisch zu erzeugen und übereinander anzuordnen. Zusätzlich können Daten im GeoJSON Format interpretiert werden und als SVG Geometrien dargestellt werden. Ein Nachteil ist die fehlende Optimierung für Touchscreens wodurch die Verwendung auf Mobilen Geräten erschwert wird. Zudem fehlt Leaflet die Möglichkeit GeoJSON Daten in Form des Tile-Systems zu beziehen. Diese Funktionalität wurde dann durch das Plugin Leaflet GeoJSON Tile Layer hinzugefügt.
 \subsection*{Leaflet GeoJSON Tile Layer}
 Leaflet GeoJSON Tile Layer ist ein Plugin für Leaflet, das die Möglichkeit bietet Daten in Form des Tile-Systems von einem Service zu beziehen. Diese Daten werden anschliessend von Leaflet interpretiert und als SVG Elemente gerendert. Eine klare Stärke dieses Plugins ist die einfache Verwendung. Dieses Plugin besitzt auch einige Schwächen in der Implementation. Beispielsweise werden bei einer Antwort mit dem HTTP Status Code 204 - No content Daten erwartet was jedoch dem Standard widerspricht. Hierfür und für das Erkennen von Duplikate wurde das Plugin angepasst.
 \subsection*{AngularJS}
@@ -38,6 +38,6 @@ Im Rahmen dieses Projektes wurde folgende Technologien verwendet:\\
 \centering
 \includegraphics[height=8cm]{images/cloud.png}
 \caption{Technologien Cloud}
-\label{fig:mainviewpartialview}
+\label{fig:technologycloud}
 \end{figure}
 \noindent

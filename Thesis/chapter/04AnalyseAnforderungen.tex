@@ -19,7 +19,7 @@ Zusätzlich zu den funktionalen Anforderungen ist es bei diesen grossen Datenmen
 \item Performance: Effiziente Kommunikation zwischen Frontend und Backend für die Übertragung von Netzwerkdaten.
 \item Performance: Eine Abfrage inkl. Filterung von Netzwerkdaten auf der Datenbank muss unter einer Sekunde beantwortet werden können.
 \item Bedienbarkeit: Das User Interface soll einfach und möglichst ohne Tutorial bedienbar sein.
-\item Aussehen: Das User Interface soll im Design von der Senozon AG erscheinen.
+\item Aussehen: Das User Interface soll im Design der Senozon AG erscheinen.
 \item Skalierbarkeit: Die Web Applikation soll skalierbar sein, damit auch grössere Mengen an Daten bewältigt werden können.
 \end{itemize}
 \section{Risiken}
@@ -30,4 +30,4 @@ Eine Massnahme, um dieses Risiko möglichst klein zu halten, ist es, die grosse 
 Dieses Risiko ist nicht eingetreten. Durch den Einsatz von verschiedenen Konzepten, wie z.B. des QuadTile Algorithmus \cite{OSMQuadTiles} oder verschiedenen Optimierungen auf Seite der Software und der Datenbank, konnte eine gute bis sehr gute Performance erreicht werden.
 \subsection*{Risiko 2: Aufwändige Backend Implementierung}
 Die Konzeptionierung und Implementation dieser Applikation konzentriert sich hauptsächlich auf das User Interface. Das Backend soll stark vereinfacht angenommen werden. Jedoch besteht das Risiko, dass ohne komplexeres Backend die grossen Datenmengen auf dem User Interface nicht effizient dargestellt werden können.\\
-Als Massnahme wurde möglichst früh mit grossen Datenmengen gearbeitet, sodass der Umfang der Optimierungen, die auf der Seite des Backends vorgenommen werden müssen, zum Vorschein kam. Es stelle sich heraus, dass dieser Umfang  um einiges grösser war als erwartet. Dies bedeutete einen deutlich höheren Aufwand in der Implementation des Backends, denn ohne der effizienten Darstellung der Daten ist der Nutzen dieser Web Applikation nicht sehr gross.
+Als Massnahme wurde möglichst früh mit grossen Datenmengen gearbeitet, sodass der Umfang der Optimierungen, die auf der Seite des Backends vorgenommen werden müssen, zum Vorschein kam. Es stelle sich heraus, dass dieser Umfang  um einiges grösser war als erwartet. Dies bedeutete einen deutlich höheren Aufwand in der Implementation des Backends, denn ohne des effizienten Umgangs mit den Daten im Backend ist der effektive Nutzen dieser Web Applikation nur sehr klein.

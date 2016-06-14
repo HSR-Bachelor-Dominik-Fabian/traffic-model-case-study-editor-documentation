@@ -94,9 +94,3 @@ Die Abfrage der Strassen beinhaltet eine LIKE Abfrage von SQL, die das Suchen vo
 \subsection{Datenbank Redundanz} \label{ch:redundance}
 Die Daten in der Datenbank sind in eine Tabelle \glqq{}Links\grqq{} und eine Tabelle \glqq{}Nodes\grqq{} aufgeteilt. Bei der Abfrage werden sowohl die Parameter des Links als auch die Koordinaten der dazugehörigen Nodes benötigt. Dafür wurde zu Beginn ein klassischer SQL JOIN verwendet, um die beiden Tabellen miteinander zu verknüpfen. Durch die Analyse des Ausführungsplans wurde ersichtlich, dass dieser JOIN ca. die Hälfte der Ausführungszeit in Anspruch nahm. Um diese Zeit einzusparen, werden nun die Koordinaten der beiden Nodes direkt beim Import der Daten in die Tabelle der Links mit abgespeichert. Dadurch sind die Koordinaten der Nodes zwar redundant vorhanden, jedoch beschleunigt dies die Abfrage um den Faktor 2. Daher wurde die Redundanz der Daten in Kauf genommen.
 \newpage
-\section{Infrastruktur}
-evtl. TODO
-\subsection{Docker}
-evtl. TODO
-\subsection{Load Balancing}
-evtl. TODO
